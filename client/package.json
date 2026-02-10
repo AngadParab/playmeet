@@ -68,5 +68,10 @@
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
     "vite": "^7.1.5"
-  }
+  },
+  "description": "**React frontend application for the PLAYMEET sports management platform**",
+  "main": "eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
