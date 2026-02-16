@@ -98,7 +98,7 @@ const Register = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard")
+      navigate("/mode-selection")
     }
   }, [user, navigate])
 
