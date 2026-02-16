@@ -6,8 +6,8 @@ import { useSocket } from "@/hooks/useSocket"
 import { useEvents } from "@/hooks/useEvents"
 import { useMetadata } from "@/hooks/useMetadata"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import EventDetailsSkeleton from "@/components/events/EventDetailsSkeleton"
-import EventDetailsError from "@/components/events/EventDetailsError"
+import EventDetailsSkeleton from "@/modules/physical/events/EventDetailsSkeleton"
+import EventDetailsError from "@/modules/physical/events/EventDetailsError"
 import api from "@/utils/api"
 
 import {
@@ -20,7 +20,7 @@ import {
   DeleteConfirmModal,
   ShareModal,
   ImageGalleryModal
-} from "@/components/events/details"
+} from "@/modules/physical/events/details"
 
 const EventDetails = () => {
   const { id } = useParams()

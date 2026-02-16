@@ -1,6 +1,6 @@
-import Leaderboard from '../models/leaderboardModel.js';
-import User from '../models/userModel.js';
-import Event from '../models/eventModel.js';
+import Leaderboard from '../../models/leaderboardModel.js';
+import User from '../../models/userModel.js';
+import Event from '../../models/eventModel.js';
 
 // Get leaderboard
 export const getLeaderboard = async (req, res) => {

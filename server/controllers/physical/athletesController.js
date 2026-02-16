@@ -1,5 +1,5 @@
-import User from "../models/userModel.js";
-import Event from "../models/eventModel.js";
+import User from "../../models/userModel.js";
+import Event from "../../models/eventModel.js";
 import asyncHandler from 'express-async-handler';
 
 // Get all athletes with filtering and pagination

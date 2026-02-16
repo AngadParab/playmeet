@@ -15,10 +15,10 @@ import {
   getUserEvents,
   searchEvents,
   getNearbyEvents,
-   getFeaturedEvents,
+  getFeaturedEvents,
   getTrendingEvents,
   getUpcomingEvents
-} from '../controllers/eventController.js';
+} from '../controllers/physical/eventController.js';
 
 const router = express.Router();
 

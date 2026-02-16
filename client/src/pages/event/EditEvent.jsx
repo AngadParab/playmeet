@@ -9,7 +9,7 @@ import { useVenue } from "@/hooks/useVenue"
 import {
   Calendar, ImagePlus, X, ChevronLeft, Clock, MapPin, Users, Eye, Upload, Plus, Trash2, CheckCircle, Target, Shield, Camera, FileText, Settings, ArrowRight, AlertTriangle, Loader2, IndianRupee
 } from 'lucide-react'
-import { VenueSelector } from "@/components/events/VenueSelector"
+import { VenueSelector } from "@/modules/physical/events/VenueSelector"
 import {
   Form,
   FormControl,

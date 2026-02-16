@@ -10,7 +10,7 @@ import {
   getUserEvents,
   getUserBookings
 } from "../controllers/userController.js";
-import { toggleFollowAthlete } from "../controllers/athletesController.js";
+import { toggleFollowAthlete } from "../controllers/physical/athletesController.js";
 
 const router = express.Router();
 

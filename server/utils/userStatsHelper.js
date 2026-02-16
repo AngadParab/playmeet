@@ -1,5 +1,5 @@
 import User from '../models/userModel.js';
-import { updateUserPoints } from '../controllers/leaderboardController.js';
+import { updateUserPoints } from '../controllers/physical/leaderboardController.js';
 
 // Achievement definitions
 export const ACHIEVEMENTS = {

@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import AthleteCard from '@/components/athletes/AthleteCard';
+import AthleteCard from '@/modules/physical/athletes/AthleteCard';
 
 // Sports categories with icons
 const sportsCategories = [

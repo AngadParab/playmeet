@@ -6,7 +6,7 @@ import {
     getTopAthletes,
     getAthleteAchievements,
     searchAthletes
-} from '../controllers/athletesController.js';
+} from '../controllers/physical/athletesController.js';
 import { isAuthenticated } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

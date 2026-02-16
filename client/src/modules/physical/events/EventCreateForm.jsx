@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast"
 import { useEvents } from "@/hooks/useEvents"
 import { useVenue } from "@/hooks/useVenue"
 import { Calendar, ImagePlus, X, ChevronLeft, Clock, MapPin, Users, Upload, Plus, Trash2, CheckCircle, Sparkles, Camera, ArrowRight, AlertTriangle, IndianRupee } from 'lucide-react'
-import { VenueSelector } from "@/components/events/VenueSelector"
+import { VenueSelector } from "@/modules/physical/events/VenueSelector"
 import {
     Form,
     FormControl,

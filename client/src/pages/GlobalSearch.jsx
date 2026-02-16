@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import api from '@/utils/api';
-import EventCard from '@/components/events/EventCard';
+import EventCard from '@/modules/physical/events/EventCard';
 import VenueCard from '@/components/venues/VenueCard';
 import HeroBg from '@/components/HeroBg';
 

@@ -10,7 +10,7 @@ import {
     getMonthlyLeaderboard,
     getUserStats,
     getCategories
-} from '../controllers/leaderboardController.js';
+} from '../controllers/physical/leaderboardController.js';
 import { isAuthenticated, isAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

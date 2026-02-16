@@ -1,7 +1,7 @@
-import Event from "../models/eventModel.js";
-import User from "../models/userModel.js";
-import { cloudinary, deleteImage } from "../config/cloudinary.js";
-import { completeUserAction, POINT_VALUES } from "../utils/userStatsHelper.js";
+import Event from "../../models/eventModel.js";
+import User from "../../models/userModel.js";
+import { cloudinary, deleteImage } from "../../config/cloudinary.js";
+import { completeUserAction, POINT_VALUES } from "../../utils/userStatsHelper.js";
 
 // Create Event Controller
 export const createEvent = async (req, res) => {
@@ -239,7 +239,7 @@ export const getAllEvents = async (req, res) => {
     let sort = {};
     let sortField = "default";
     let sortOrder = "asc";
-    
+
     if (sortBy) {
       [sortField, sortOrder] = sortBy.split(":");
       switch (sortField) {
@@ -356,7 +356,7 @@ export const getAllEvents = async (req, res) => {
     // Calculate additional metadata for each event with IST timezone
     const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
     const nowIST = new Date(now.getTime() + istOffset);
-    
+
     const eventsWithMetadata = events.map(event => {
       const participantCount = event.participants?.length || 0;
       const averageRating = event.ratings?.length > 0
@@ -369,11 +369,11 @@ export const getAllEvents = async (req, res) => {
       const eventDateTime = new Date(eventDate);
       eventDateTime.setHours(hours, minutes, 0, 0);
       const eventDateTimeIST = new Date(eventDateTime.getTime() + istOffset);
-      
+
       // Determine status based on time comparison
       let calculatedStatus = "Upcoming";
       let statusPriority = 1; // For sorting: 1=Upcoming, 2=Ongoing, 3=Completed
-      
+
       if (nowIST > eventDateTimeIST) {
         calculatedStatus = "Completed";
         statusPriority = 3;
@@ -399,18 +399,18 @@ export const getAllEvents = async (req, res) => {
 
     // Apply status filter based on calculated status
     let filteredEvents = eventsWithMetadata;
-    
+
     // Check if user wants to include ended/completed events
     const showEnded = includeEnded === "true" || includeEnded === true;
-    
+
     if (status && status !== "all") {
       // Filter by specific status if requested
-      filteredEvents = eventsWithMetadata.filter(event => 
+      filteredEvents = eventsWithMetadata.filter(event =>
         event.status.toLowerCase() === status.toLowerCase()
       );
     } else if (!showEnded) {
       // By default, show only upcoming and ongoing events (exclude completed)
-      filteredEvents = eventsWithMetadata.filter(event => 
+      filteredEvents = eventsWithMetadata.filter(event =>
         event.status === "Upcoming" || event.status === "Ongoing"
       );
     }
@@ -419,8 +419,8 @@ export const getAllEvents = async (req, res) => {
     if (sortField === "status") {
       // Sort by status priority (Upcoming -> Ongoing -> Completed)
       filteredEvents.sort((a, b) => {
-        const diff = sortOrder === "desc" 
-          ? b.statusPriority - a.statusPriority 
+        const diff = sortOrder === "desc"
+          ? b.statusPriority - a.statusPriority
           : a.statusPriority - b.statusPriority;
         // Secondary sort by date
         return diff !== 0 ? diff : new Date(a.date) - new Date(b.date);
@@ -428,8 +428,8 @@ export const getAllEvents = async (req, res) => {
     } else if (sortField === "rating") {
       // Sort by average rating
       filteredEvents.sort((a, b) => {
-        const diff = sortOrder === "desc" 
-          ? b.averageRating - a.averageRating 
+        const diff = sortOrder === "desc"
+          ? b.averageRating - a.averageRating
           : a.averageRating - b.averageRating;
         // Secondary sort by date
         return diff !== 0 ? diff : new Date(a.date) - new Date(b.date);
@@ -1361,33 +1361,33 @@ export const addRating = async (req, res) => {
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: "Event not found" 
+        message: "Event not found"
       });
     }
 
     // Check if event has ended based on date and time (IST timezone)
     const eventDate = new Date(event.date);
     const [hours, minutes] = event.time.split(':').map(Number);
-    
+
     // Create event datetime
     const eventDateTime = new Date(eventDate);
     eventDateTime.setHours(hours, minutes, 0, 0);
-    
+
     // Get current time in IST (UTC + 5:30)
     const now = new Date();
     const istOffset = 5.5 * 60 * 60 * 1000; // 5 hours 30 minutes in milliseconds
     const nowIST = new Date(now.getTime() + istOffset);
-    
+
     // Convert event time to IST for comparison
     const eventDateTimeIST = new Date(eventDateTime.getTime() + istOffset);
-    
+
     // Check if event has ended
     if (nowIST <= eventDateTimeIST) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "You can only rate events after they have ended" 
+        message: "You can only rate events after they have ended"
       });
     }
 
@@ -1396,9 +1396,9 @@ export const addRating = async (req, res) => {
     );
 
     if (!isParticipant) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         success: false,
-        message: "Only participants can rate events" 
+        message: "Only participants can rate events"
       });
     }
 
@@ -1407,18 +1407,18 @@ export const addRating = async (req, res) => {
     );
 
     if (existingRating) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "You have already rated this event" 
+        message: "You have already rated this event"
       });
     }
 
     // Validate rating value
     const ratingValue = Number(req.body.rating);
     if (!ratingValue || ratingValue < 1 || ratingValue > 5) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "Rating must be a number between 1 and 5" 
+        message: "Rating must be a number between 1 and 5"
       });
     }
 
@@ -1458,7 +1458,7 @@ export const addRating = async (req, res) => {
       data: updatedEvent
     });
   } catch (error) {
-        console.log(error.message)
+    console.log(error.message)
 
     res.status(500).json({
       success: false,

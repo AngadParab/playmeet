@@ -59,6 +59,12 @@ const rateLimiterConfigs = {
     window: '1 m',
     prefix: 'rl:search',
   },
+  esports: {
+    name: 'esports',
+    limit: 50, // Stricter limit for tournament registrations etc
+    window: '1 m',
+    prefix: 'rl:esports',
+  },
 };
 
 // Initialize rate limiters
@@ -69,6 +75,7 @@ const rateLimiters = {
   admin: createUpstashRateLimiter(rateLimiterConfigs.admin),
   upload: createUpstashRateLimiter(rateLimiterConfigs.upload),
   search: createUpstashRateLimiter(rateLimiterConfigs.search),
+  esports: createUpstashRateLimiter(rateLimiterConfigs.esports),
 };
 
 const getRateLimitKey = (req) => {
@@ -104,7 +111,7 @@ export const createRateLimitMiddleware = (type, options = {}) => {
 
       if (!success) {
         const retryAfter = Math.ceil((reset - Date.now()) / 1000);
-        
+
         // Log rate limit exceeded
         console.warn(`Rate limit exceeded for ${key} on ${req.path}`, {
           ip: req.ip,
@@ -143,6 +150,7 @@ export const upstashRateLimiters = {
   admin: createRateLimitMiddleware('admin', { skipSuperAdmin: true }),
   upload: createRateLimitMiddleware('upload'),
   search: createRateLimitMiddleware('search'),
+  esports: createRateLimitMiddleware('esports'),
 };
 
 export default upstashRateLimiters;
