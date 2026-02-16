@@ -126,7 +126,7 @@ const Register = () => {
   return (
     <div className="h-screen bg-background relative overflow-hidden">
       {/* Registration Form */}
-      <div className="relative z-10 h-full flex w-full flex items-center justify-center -mt-10 mb-20 p-4">
+      <div className="relative z-10 h-full flex w-full flex items-center justify-center mb-20 p-4">
         <div
           className="w-full max-w-md animate-in fade-in slide-in-from-bottom-8 duration-700"
         >

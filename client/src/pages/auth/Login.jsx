@@ -56,7 +56,7 @@ const Login = () => {
   }
 
   return (
-    <div className="h-screen bg-background relative overflow-hidden -mt-8">
+    <div className="h-screen bg-background relative overflow-hidden">
       {/* Login Form */}
       <div className="relative z-10 h-full flex w-full flex items-center justify-center p-6">
         <div className="w-full max-w-sm animate-in fade-in zoom-in-95 duration-500">

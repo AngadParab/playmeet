@@ -12,7 +12,7 @@ import {
   Mail,
   Shield,
   Clock,
-  Trophy,
+  Loader2,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -67,7 +67,6 @@ const ResetPassword = () => {
   })
 
   const onVerifyCode = async (data) => {
-    console.log('Verifying code with data:', data)
     setVerifying(true)
     setError("")
 
@@ -83,7 +82,6 @@ const ResetPassword = () => {
         toast.success("Code verified! Now set your new password.")
       }
     } catch (err) {
-      console.error('Verify code error:', err)
       const message = err.response?.data?.message || "Invalid reset code"
       setError(message)
       toast.error(message)
@@ -93,7 +91,6 @@ const ResetPassword = () => {
   }
 
   const onResetPassword = async (data) => {
-    console.log('Resetting password with data:', data)
     setLoading(true)
     setError("")
 
@@ -113,7 +110,6 @@ const ResetPassword = () => {
         })
       }
     } catch (err) {
-      console.error('Reset password error:', err)
       const message = err.response?.data?.message || "Failed to reset password"
       setError(message)
       toast.error(message)
@@ -123,79 +119,73 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen bg-card relative overflow-hidden flex items-center justify-center p-4">
-      <div className="relative z-10 w-full max-w-md animate-in fade-in zoom-in-95 duration-500">
-        <Card className="border-border bg-card shadow-xl rounded-2xl overflow-hidden">
-          {/* Header */}
-          <CardHeader className="text-center pb-6 bg-card/20 border-b border-slate-100 dark:border-slate-800">
-            <div className="relative animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {/* Animated Icon Container */}
-              <div className="relative w-20 h-20 mx-auto mb-6">
-                <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800 rounded-2xl animate-pulse" />
-                <div className="absolute inset-1 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center shadow-sm">
-                  {step === 1 ? (
-                    <KeyRound className="w-10 h-10 text-blue-600 dark:text-blue-400" />
-                  ) : (
-                    <Lock className="w-10 h-10 text-blue-600 dark:text-blue-400" />
-                  )}
+    <div className="h-screen bg-background relative overflow-hidden">
+      <div className="relative z-10 h-full flex w-full flex items-center justify-center p-6">
+        <div className="w-full max-w-sm animate-in fade-in zoom-in-95 duration-500">
+          <Card className="border-border bg-card shadow-2xl shadow-black/5 rounded-3xl">
+            <CardHeader className="pb-6 pt-8">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center shadow-sm">
+                    {step === 1 ? (
+                      <KeyRound className="w-6 h-6 text-primary" />
+                    ) : (
+                      <Lock className="w-6 h-6 text-primary" />
+                    )}
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold text-foreground mb-2">
+                  {step === 1 ? "Verify Reset Code" : "Set New Password"}
+                </CardTitle>
+                <p className="text-muted-foreground text-sm">
+                  {step === 1
+                    ? "Enter the 6-digit code sent to your email"
+                    : "Choose a strong password for your account"
+                  }
+                </p>
+              </div>
+
+              {/* Step Indicator */}
+              <div className="flex items-center justify-center space-x-4 mt-6">
+                <div className="flex items-center space-x-2">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors duration-300 ${step === 1
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-green-500 text-white'
+                    }`}>
+                    {step === 1 ? '1' : <CheckCircle className="w-4 h-4" />}
+                  </div>
+                </div>
+                <div className={`h-0.5 w-8 transition-colors duration-300 ${step === 2 ? 'bg-green-500' : 'bg-secondary'}`} />
+                <div className="flex items-center space-x-2">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors duration-300 ${step === 2
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-secondary text-muted-foreground'
+                    }`}>
+                    2
+                  </div>
                 </div>
               </div>
+            </CardHeader>
 
-              <CardTitle className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">
-                {step === 1 ? "Verify Reset Code" : "Set New Password"}
-              </CardTitle>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-                {step === 1
-                  ? "Enter the 6-digit code sent to your email"
-                  : "Choose a strong password for your account"
-                }
-              </p>
-            </div>
-
-            {/* Step Indicator */}
-            <div className="flex items-center justify-center space-x-4 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-              <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors duration-300 ${step === 1
-                  ? 'bg-blue-600 text-white dark:bg-blue-500 dark:text-white'
-                  : 'bg-green-600 text-white'
-                  }`}>
-                  {step === 1 ? '1' : <CheckCircle className="w-4 h-4" />}
+            <CardContent className="space-y-6 px-6 pb-6">
+              {error && (
+                <div className="animate-in fade-in zoom-in-95 duration-300">
+                  <Alert className="border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 rounded-xl">
+                    <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                    <AlertTitle className="text-red-800 dark:text-red-200 font-semibold text-sm">
+                      Error
+                    </AlertTitle>
+                    <AlertDescription className="text-red-700 dark:text-red-300 text-sm">
+                      {error}
+                    </AlertDescription>
+                  </Alert>
                 </div>
-                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Verify Code</span>
-              </div>
-              <div className={`h-0.5 w-8 transition-colors duration-300 ${step === 2 ? 'bg-green-600' : 'bg-slate-200 dark:bg-slate-700'}`} />
-              <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors duration-300 ${step === 2
-                  ? 'bg-blue-600 text-white dark:bg-blue-500 dark:text-white'
-                  : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
-                  }`}>
-                  2
-                </div>
-                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">New Password</span>
-              </div>
-            </div>
-          </CardHeader>
+              )}
 
-          <CardContent className="p-8 space-y-6">
-            {error && (
-              <div className="animate-in fade-in zoom-in-95 duration-300">
-                <Alert className="border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 rounded-xl">
-                  <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                  <AlertTitle className="text-red-800 dark:text-red-200 font-semibold">
-                    Error
-                  </AlertTitle>
-                  <AlertDescription className="text-red-700 dark:text-red-300">
-                    {error}
-                  </AlertDescription>
-                </Alert>
-              </div>
-            )}
-
-            {/* Step 1: Verify Code Form */}
-            {step === 1 && (
-              <Form {...step1Form}>
-                <form onSubmit={step1Form.handleSubmit(onVerifyCode)} className="space-y-6">
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+              {/* Step 1: Verify Code Form */}
+              {step === 1 && (
+                <Form {...step1Form}>
+                  <form onSubmit={step1Form.handleSubmit(onVerifyCode)} className="space-y-6">
                     <FormField
                       control={step1Form.control}
                       name="email"
@@ -216,15 +206,13 @@ const ResetPassword = () => {
                         </FormItem>
                       )}
                     />
-                  </div>
 
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
                     <FormField
                       control={step1Form.control}
                       name="resetCode"
                       render={({ field }) => (
                         <FormItem>
-                          <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 block">
+                          <Label className="text-sm font-medium text-foreground mb-2 block">
                             6-Digit Reset Code
                           </Label>
                           <FormControl>
@@ -234,7 +222,7 @@ const ResetPassword = () => {
                                 placeholder="000000"
                                 maxLength={6}
                                 {...field}
-                                className="h-10 text-center text-2xl font-mono tracking-[0.5em] border-2 border-border focus:border-blue-600 dark:focus:border-blue-500 rounded-xl bg-slate-50 dark:bg-slate-800/50 transition-all duration-300"
+                                className="h-10 text-center text-2xl font-mono tracking-[0.5em] border-border focus:border-primary rounded-xl bg-background transition-all duration-300"
                                 onChange={(e) => {
                                   const value = e.target.value.replace(/\D/g, '').slice(0, 6)
                                   field.onChange(value)
@@ -251,32 +239,16 @@ const ResetPassword = () => {
                         </FormItem>
                       )}
                     />
-                  </div>
 
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
-                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-100 dark:border-blue-800">
-                      <div className="flex items-center space-x-2 text-sm text-blue-700 dark:text-blue-300">
-                        <Clock className="w-4 h-4" />
-                        <span className="font-medium">Time Sensitive</span>
-                      </div>
-                      <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                        Code expires in 10 minutes. Check spam if not received.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
                     <Button
                       type="submit"
                       disabled={verifying}
-                      className="w-full h-12 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold shadow-sm hover:shadow-md transition-all duration-300 rounded-xl"
+                      className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm hover:shadow-md transition-all duration-300 rounded-xl"
                     >
                       <div className="flex items-center justify-center">
                         {verifying ? (
                           <div className="flex items-center space-x-2">
-                            <div
-                              className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
-                            />
+                            <Loader2 className="w-4 h-4 animate-spin" />
                             <span>Verifying Code...</span>
                           </div>
                         ) : (
@@ -287,36 +259,24 @@ const ResetPassword = () => {
                         )}
                       </div>
                     </Button>
-                  </div>
 
-                  <div className="text-center space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
-                    <Link
-                      to="/forgot-password"
-                      className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium hover:underline transition-colors inline-flex items-center space-x-1"
-                    >
-                      <Mail className="w-4 h-4" />
-                      <span>Didn't receive the code? Send again</span>
-                    </Link>
-
-                    <div className="flex items-center justify-center">
+                    <div className="text-center pt-4 border-t border-border">
                       <Link
                         to="/login"
-                        className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium hover:underline transition-colors flex items-center space-x-1"
+                        className="text-sm text-primary hover:underline font-medium transition-colors inline-flex items-center"
                       >
-                        <ArrowLeft className="w-4 h-4" />
-                        <span>Back to Login</span>
+                        <ArrowLeft className="w-4 h-4 mr-1" />
+                        Back to Login
                       </Link>
                     </div>
-                  </div>
-                </form>
-              </Form>
-            )}
+                  </form>
+                </Form>
+              )}
 
-            {/* Step 2: New Password Form */}
-            {step === 2 && (
-              <Form {...step2Form}>
-                <form onSubmit={step2Form.handleSubmit(onResetPassword)} className="space-y-6">
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+              {/* Step 2: New Password Form */}
+              {step === 2 && (
+                <Form {...step2Form}>
+                  <form onSubmit={step2Form.handleSubmit(onResetPassword)} className="space-y-6">
                     <FormField
                       control={step2Form.control}
                       name="newPassword"
@@ -339,9 +299,7 @@ const ResetPassword = () => {
                         </FormItem>
                       )}
                     />
-                  </div>
 
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
                     <FormField
                       control={step2Form.control}
                       name="confirmPassword"
@@ -364,34 +322,27 @@ const ResetPassword = () => {
                         </FormItem>
                       )}
                     />
-                  </div>
 
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
-                    <div className="bg-slate-50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                    <div className="bg-secondary/50 rounded-xl p-4 border border-border">
+                      <div className="flex items-center space-x-2 text-sm text-foreground">
                         <Shield className="w-4 h-4" />
                         <span className="font-medium">Password Requirements</span>
                       </div>
-                      <ul className="text-xs text-slate-500 dark:text-slate-500 mt-2 space-y-1">
+                      <ul className="text-xs text-muted-foreground mt-2 space-y-1">
                         <li>• At least 6 characters long</li>
                         <li>• Include letters and numbers</li>
-                        <li>• Use a unique password</li>
                       </ul>
                     </div>
-                  </div>
 
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="w-full h-12 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold shadow-sm hover:shadow-md transition-all duration-300 rounded-xl"
+                      className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm hover:shadow-md transition-all duration-300 rounded-xl"
                     >
                       <div className="flex items-center justify-center">
                         {loading ? (
                           <div className="flex items-center space-x-2">
-                            <div
-                              className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
-                            />
+                            <Loader2 className="w-4 h-4 animate-spin" />
                             <span>Resetting Password...</span>
                           </div>
                         ) : (
@@ -402,45 +353,22 @@ const ResetPassword = () => {
                         )}
                       </div>
                     </Button>
-                  </div>
 
-                  <div className="text-center space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
-                    <div className="flex items-center justify-center space-x-4">
-                      <Link
-                        to="/login"
-                        className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium hover:underline transition-colors flex items-center space-x-1"
-                      >
-                        <ArrowLeft className="w-4 h-4" />
-                        <span>Back to Login</span>
-                      </Link>
-
+                    <div className="text-center pt-4 border-t border-border">
                       <button
                         type="button"
                         onClick={() => setStep(1)}
-                        className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium hover:underline transition-colors flex items-center space-x-1"
+                        className="text-sm text-muted-foreground hover:text-foreground font-medium transition-colors inline-flex items-center"
                       >
-                        <KeyRound className="w-4 h-4" />
-                        <span>Change Code</span>
+                        <ArrowLeft className="w-4 h-4 mr-1" />
+                        Change Code
                       </button>
                     </div>
-                  </div>
-                </form>
-              </Form>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* PLAYMEET Branding */}
-        <div
-          className="text-center mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500"
-        >
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Trophy className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <span className="font-bold text-lg text-slate-900 dark:text-slate-50">PLAYMEET</span>
-          </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Secure password reset for your sports community
-          </p>
+                  </form>
+                </Form>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

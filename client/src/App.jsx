@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import PlayMeetLoader from './components/Loader';
 import { useAuth } from '@/hooks/useAuth';
 import { useMetadata } from '@/hooks/useMetadata';
+import { ModeProvider, useMode } from '@/context/ModeContext';
 import Layout from '@/components/layout/Layout';
 import AdminLayout from '@/components/layout/AdminLayout';
 import ScrollToTop from '@/components/ScrollToTop';
@@ -34,6 +35,7 @@ import Leaderboard from './pages/leaderboard/Leaderboard';
 import Athletes from './pages/athletes/Athletes';
 
 // Protected User Pages
+import ModeSelection from './pages/ModeSelection';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import CreateEvent from './pages/event/CreateEvent';
@@ -85,9 +87,11 @@ const PageLoader = ({ message = "Loading amazing sports events..." }) => (
   </div>
 );
 
-// Enhanced Protected Route with loading states
-const ProtectedRoute = ({ children, adminOnly = false, title = "", data = {} }) => {
+// Enhanced Protected Route with loading states and Mode enforcement
+const ProtectedRoute = ({ children, adminOnly = false, title = "", data = {}, requiredMode = null }) => {
   const { user, loading } = useAuth();
+  const { mode } = useMode();
+  const location = useLocation();
 
   // Use metadata hook for dynamic meta tags
   useMetadata(data);
@@ -97,7 +101,19 @@ const ProtectedRoute = ({ children, adminOnly = false, title = "", data = {} }) 
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  // If user is logged in but hasn't selected a mode, redirect to mode selection
+  // Unless we are already on the mode selection page
+  if (!mode && location.pathname !== '/mode-selection' && !adminOnly) {
+    return <Navigate to="/mode-selection" replace />;
+  }
+
+  // If a specific mode is required for this route (e.g., only 'athletes' or only 'esports')
+  if (requiredMode && mode !== requiredMode && !adminOnly) {
+    // Redirect to the dashboard of the current mode or back to mode selection
+    return <Navigate to={mode ? "/dashboard" : "/mode-selection"} replace />;
   }
 
   if (adminOnly && user?.role !== 'admin') {
@@ -123,7 +139,8 @@ const PublicRoute = ({ children, title = "", data = {} }) => {
   );
 };
 
-function App() {
+// Main App Component Content (inner component to use Mode Context)
+const AppContent = () => {
   const location = useLocation();
   const { user, loading: authLoading } = useAuth();
 
@@ -138,50 +155,69 @@ function App() {
         <ScrollToTop />
         <Routes location={location} key={location.pathname}>
           {/* Public Routes */}
+          <Route path="login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="register" element={<PublicRoute><Register /></PublicRoute>} />
+          <Route path="forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+          <Route path="reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+
+          {/* Mode Selection - Protected but doesn't require specific mode */}
+          <Route path="mode-selection" element={<ProtectedRoute><ModeSelection /></ProtectedRoute>} />
+
           <Route path="/" element={<Layout />}>
-            <Route index element={<PublicRoute><Home /></PublicRoute>} />
-            <Route path="login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="register" element={<PublicRoute><Register /></PublicRoute>} />
-            <Route path="forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
-            <Route path="reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
-            <Route path="events" element={<PublicRoute><Events /></PublicRoute>} />
-            <Route path="events/:id" element={<PublicRoute><EventDetails /></PublicRoute>} />
-            <Route path="profile/:userId" element={<PublicRoute><PublicProfile /></PublicRoute>} />
-            <Route path="search" element={<PublicRoute><GlobalSearch /></PublicRoute>} />
-            <Route path="venues" element={<PublicRoute><Venues /></PublicRoute>} />
-            <Route path="venues/:id" element={<PublicRoute><VenueDetails /></PublicRoute>} />
-            <Route path="venues/:id/book" element={<ProtectedRoute><VenueBooking /></ProtectedRoute>} />
-            <Route path="my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
-            <Route path="athletes" element={<PublicRoute><Athletes /></PublicRoute>} />
-            <Route path="leaderboard" element={<PublicRoute><Leaderboard /></PublicRoute>} />
-            <Route path="community" element={<PublicRoute><Communities /></PublicRoute>} />
-            <Route path="community/:id" element={<PublicRoute><CommunityDetails /></PublicRoute>} />
-            <Route path="community/post/:postId" element={<PublicRoute><PostDetail /></PublicRoute>} />
+            {/* If logged in, go to mode selection or dashboard, otherwise home */}
+            <Route index element={
+              user ? <Navigate to="/mode-selection" replace /> : <PublicRoute><Home /></PublicRoute>
+            } />
+
             <Route path="about" element={<PublicRoute><About /></PublicRoute>} />
             <Route path="contact" element={<PublicRoute><Contact /></PublicRoute>} />
             <Route path="privacy" element={<PublicRoute><Privacy /></PublicRoute>} />
             <Route path="terms" element={<PublicRoute><Terms /></PublicRoute>} />
             <Route path="help" element={<PublicRoute><Help /></PublicRoute>} />
 
-            {/* Protected User Routes */}
+
+
+            {/* SHARED Protected Routes (accessible in both modes) */}
             <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="events/create" element={<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
-            <Route path="events/:id/edit" element={<ProtectedRoute><EditEvent /></ProtectedRoute>} />
-            {/* <Route path="my-events" element={<ProtectedRoute title="My Events"><MyEvents /></ProtectedRoute>} /> */}
             <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            {/* <Route path="user/:id" element={<ProtectedRoute title="User Profile"><UserProfile /></ProtectedRoute>} /> */}
             <Route path="notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             <Route path="settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            {/* <Route path="bookmarks" element={<ProtectedRoute title="Bookmarks"><Bookmarks /></ProtectedRoute>} /> */}
+            <Route path="profile/:userId" element={<PublicRoute><PublicProfile /></PublicRoute>} />
+            <Route path="search" element={<PublicRoute><GlobalSearch /></PublicRoute>} />
+
+            {/* --- PHYSICAL SPORTS MODE ROUTES --- */}
+            {/* These could technically be restricted by requiredMode='athletes' ifstrict separation is desired */}
+            <Route path="events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+            <Route path="events/:id" element={<ProtectedRoute><EventDetails /></ProtectedRoute>} />
+            <Route path="events/create" element={<ProtectedRoute requiredMode="athletes"><CreateEvent /></ProtectedRoute>} />
+            <Route path="events/:id/edit" element={<ProtectedRoute requiredMode="athletes"><EditEvent /></ProtectedRoute>} />
             <Route path="chat/:eventId" element={<ProtectedRoute><EventChat /></ProtectedRoute>} />
-            <Route path="events/:eventId/teams" element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
-            <Route path="events/:eventId/teams/:teamId" element={<ProtectedRoute><TeamManagement /></ProtectedRoute>} />
-            <Route path="users/:id/followers" element={<ProtectedRoute><FollowersFollowing type="followers" /></ProtectedRoute>} />
-            <Route path="users/:id/following" element={<ProtectedRoute><FollowersFollowing type="following" /></ProtectedRoute>} />
+            <Route path="events/:eventId/teams" element={<ProtectedRoute requiredMode="athletes"><TeamManagement /></ProtectedRoute>} />
+            <Route path="events/:eventId/teams/:teamId" element={<ProtectedRoute requiredMode="athletes"><TeamManagement /></ProtectedRoute>} />
+
+            <Route path="venues" element={<ProtectedRoute><Venues /></ProtectedRoute>} />
+            <Route path="venues/:id" element={<ProtectedRoute><VenueDetails /></ProtectedRoute>} />
+            <Route path="venues/:id/book" element={<ProtectedRoute requiredMode="athletes"><VenueBooking /></ProtectedRoute>} />
+            <Route path="my-bookings" element={<ProtectedRoute requiredMode="athletes"><MyBookings /></ProtectedRoute>} />
+
+            <Route path="athletes" element={<ProtectedRoute><Athletes /></ProtectedRoute>} />
+            <Route path="leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+
+            <Route path="community" element={<ProtectedRoute><Communities /></ProtectedRoute>} />
+            <Route path="community/:id" element={<ProtectedRoute><CommunityDetails /></ProtectedRoute>} />
+            <Route path="community/post/:postId" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
             <Route path="community/create" element={<ProtectedRoute><CreateCommunity /></ProtectedRoute>} />
             <Route path="community/:id/edit" element={<ProtectedRoute><EditCommunity /></ProtectedRoute>} />
             <Route path="community/:id/manage" element={<ProtectedRoute><ManageCommunity /></ProtectedRoute>} />
+
+            <Route path="users/:id/followers" element={<ProtectedRoute><FollowersFollowing type="followers" /></ProtectedRoute>} />
+            <Route path="users/:id/following" element={<ProtectedRoute><FollowersFollowing type="following" /></ProtectedRoute>} />
             <Route path="venues/:id/edit" element={<ProtectedRoute><EditVenue /></ProtectedRoute>} />
+
+
+            {/* --- ESPORTS MODE ROUTES (Placeholders for now) --- */}
+            <Route path="esports/*" element={<ProtectedRoute requiredMode="esports"><Navigate to="/esports/tournaments" /></ProtectedRoute>} />
+            <Route path="esports/tournaments" element={<ProtectedRoute requiredMode="esports"><div>Esports Tournaments Placeholder</div></ProtectedRoute>} />
           </Route>
 
           {/* Admin Routes */}
@@ -207,6 +243,14 @@ function App() {
         </Routes>
       </AnimatePresence>
     </ErrorBoundary>
+  );
+};
+
+function App() {
+  return (
+    <ModeProvider>
+      <AppContent />
+    </ModeProvider>
   );
 }
 
