@@ -16,7 +16,7 @@ const ModeSelection = () => {
         if (mode === 'athletes') {
             navigate('/dashboard'); // Or '/athletes' base route
         } else {
-            navigate('/esports/tournaments'); // Or '/esports' base route
+            navigate('/esports'); // Or '/esports' base route
         }
     };
 
@@ -42,8 +42,8 @@ const ModeSelection = () => {
                     >
                         <Card
                             className={`h-full cursor-pointer transition-all duration-300 border-2 ${hoveredMode === 'athletes'
-                                    ? 'border-green-500 shadow-xl shadow-green-500/20'
-                                    : 'border-transparent hover:border-border-light dark:hover:border-border-dark'
+                                ? 'border-green-500 shadow-xl shadow-green-500/20'
+                                : 'border-transparent hover:border-border-light dark:hover:border-border-dark'
                                 }`}
                             onClick={() => handleModeSelect('athletes')}
                         >
@@ -79,8 +79,8 @@ const ModeSelection = () => {
                                     </ul>
                                     <Button
                                         className={`w-full text-lg h-12 ${hoveredMode === 'athletes'
-                                                ? 'bg-green-600 hover:bg-green-700 text-white'
-                                                : 'bg-secondary text-secondary-foreground'
+                                            ? 'bg-green-600 hover:bg-green-700 text-white'
+                                            : 'bg-secondary text-secondary-foreground'
                                             }`}
                                     >
                                         Enter Arena <ArrowRight className="ml-2 w-5 h-5" />
@@ -99,8 +99,8 @@ const ModeSelection = () => {
                     >
                         <Card
                             className={`h-full cursor-pointer transition-all duration-300 border-2 ${hoveredMode === 'esports'
-                                    ? 'border-purple-500 shadow-xl shadow-purple-500/20'
-                                    : 'border-transparent hover:border-border-light dark:hover:border-border-dark'
+                                ? 'border-purple-500 shadow-xl shadow-purple-500/20'
+                                : 'border-transparent hover:border-border-light dark:hover:border-border-dark'
                                 }`}
                             onClick={() => handleModeSelect('esports')}
                         >
@@ -136,8 +136,8 @@ const ModeSelection = () => {
                                     </ul>
                                     <Button
                                         className={`w-full text-lg h-12 ${hoveredMode === 'esports'
-                                                ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                                                : 'bg-secondary text-secondary-foreground'
+                                            ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                                            : 'bg-secondary text-secondary-foreground'
                                             }`}
                                     >
                                         Enter Nexus <ArrowRight className="ml-2 w-5 h-5" />

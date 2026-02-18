@@ -33,6 +33,12 @@ import MyBookings from './pages/venues/MyBookings';
 import Leaderboard from './pages/leaderboard/Leaderboard';
 // import Community from './pages/community/Community';
 import Athletes from './pages/athletes/Athletes';
+// Esports Pages
+import Esports from './pages/esports/Esports';
+import EsportsTournaments from './pages/esports/EsportsTournaments';
+import EsportsGames from './pages/esports/EsportsGames';
+import EsportsLeaderboard from './pages/esports/EsportsLeaderboard';
+import EsportsPlayers from './pages/esports/EsportsPlayers';
 
 // Protected User Pages
 import ModeSelection from './pages/ModeSelection';
@@ -170,6 +176,7 @@ const AppContent = () => {
             } />
 
             <Route path="about" element={<PublicRoute><About /></PublicRoute>} />
+            <Route path="home" element={<PublicRoute><Home /></PublicRoute>} />
             <Route path="contact" element={<PublicRoute><Contact /></PublicRoute>} />
             <Route path="privacy" element={<PublicRoute><Privacy /></PublicRoute>} />
             <Route path="terms" element={<PublicRoute><Terms /></PublicRoute>} />
@@ -215,9 +222,12 @@ const AppContent = () => {
             <Route path="venues/:id/edit" element={<ProtectedRoute><EditVenue /></ProtectedRoute>} />
 
 
-            {/* --- ESPORTS MODE ROUTES (Placeholders for now) --- */}
-            <Route path="esports/*" element={<ProtectedRoute requiredMode="esports"><Navigate to="/esports/tournaments" /></ProtectedRoute>} />
-            <Route path="esports/tournaments" element={<ProtectedRoute requiredMode="esports"><div>Esports Tournaments Placeholder</div></ProtectedRoute>} />
+            {/* --- ESPORTS MODE ROUTES --- */}
+            <Route path="esports" element={<ProtectedRoute requiredMode="esports"><Esports /></ProtectedRoute>} />
+            <Route path="esports/tournaments" element={<ProtectedRoute requiredMode="esports"><EsportsTournaments /></ProtectedRoute>} />
+            <Route path="esports/games" element={<ProtectedRoute requiredMode="esports"><EsportsGames /></ProtectedRoute>} />
+            <Route path="esports/leaderboard" element={<ProtectedRoute requiredMode="esports"><EsportsLeaderboard /></ProtectedRoute>} />
+            <Route path="esports/players" element={<ProtectedRoute requiredMode="esports"><EsportsPlayers /></ProtectedRoute>} />
           </Route>
 
           {/* Admin Routes */}

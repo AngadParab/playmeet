@@ -1,0 +1,25 @@
+.esports-theme {
+  /* Esports Theme Variables - Using Standard Theme Colors */
+  /* We piggyback on the existing CSS variables to ensure consistency */
+
+  --es-primary: var(--primary);
+  --es-secondary: var(--secondary);
+  --es-bg: var(--background);
+  --es-card: var(--card);
+  --es-card-hover: var(--muted);
+  --es-text: var(--foreground);
+  --es-text-muted: var(--muted-foreground);
+  --es-border: var(--border);
+}
+
+/* 
+   We remove the forced dark mode overrides so it respects the system/user preference
+   just like the rest of the app.
+*/
+
+.esports-theme .bg-grid-pattern {
+  background-image: linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+}

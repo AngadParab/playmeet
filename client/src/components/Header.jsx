@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "@/hooks/useAuth"
+import { useMode } from "@/context/ModeContext"
 import {
   Menu,
   X,
@@ -21,6 +22,9 @@ import {
   MapPin,
   Trophy,
   CalendarCheck,
+  Gamepad2,
+  MousePointer2,
+  Radio
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -31,9 +35,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Badge } from "@/components/ui/badge"
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth()
+  const { mode } = useMode()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
@@ -115,41 +121,43 @@ const Header = () => {
   }
 
   const unreadNotifications = user?.notifications?.filter((n) => !n.read)?.length || 0
+  const isEsports = mode === 'esports'
 
-  // Navigation links
-  const navigationLinks = [
-    {
-      name: "Home",
-      path: "/",
-      icon: Home,
-      description: "Back to homepage",
-    },
-    {
-      name: "Events",
-      path: "/events",
-      icon: Calendar,
-      description: "Browse sports events",
-    },
+  // Standard Navigation (Athletes Mode / Default)
+  const defaultNavigation = [
+    { name: "Home", path: "/home", icon: Home },
+    { name: "Events", path: "/events", icon: Calendar },
     { name: "Venues", icon: MapPin, path: "/venues" },
     { name: "Leaderboard", icon: Trophy, path: "/leaderboard" },
     { name: "Athletes", icon: Search, path: "/athletes" },
-    // ...(isAuthenticated
-    //   ? [
-    //     {
-    //       name: "Dashboard",
-    //       path: "/dashboard",
-    //       icon: Activity,
-    //       description: "Your personal dashboard",
-    //     },
-    //   ]
-    //   : []),
-    {
-      name: "Community",
-      path: "/community",
-      icon: Users,
-      description: "Connect with athletes",
-    },
+    { name: "Community", path: "/community", icon: Users },
   ]
+
+  // Esports Navigation
+  const esportsNavigation = [
+    { name: "Home", path: "/esports", icon: Home },
+    { name: "Tournaments", path: "/esports/tournaments", icon: Trophy },
+    { name: "Games", path: "/esports/games", icon: Gamepad2 },
+    { name: "Leaderboard", path: "/esports/leaderboard", icon: Activity },
+    { name: "Players", path: "/esports/players", icon: User },
+    { name: "Community", path: "/community", icon: Users },
+  ]
+
+  const activeLinks = isEsports ? esportsNavigation : defaultNavigation
+
+  // Dynamic header styles
+  // Standard header styles for both modes
+  const headerStyles = {
+    header: cn(
+      "sticky top-0 z-50 w-full transition-all duration-300",
+      isScrolled ? "glass shadow-sm py-2" : "bg-transparent border-transparent py-4",
+    ),
+    nav: "bg-secondary/50 border border-border/50",
+    activeLink: "bg-background text-primary shadow-sm",
+    inactiveLink: "text-muted-foreground hover:text-foreground hover:bg-background/50",
+    logoText: "text-foreground group-hover:text-primary transition-colors",
+    actionBtn: "text-muted-foreground hover:text-foreground"
+  }
 
   // Quick actions for authenticated users
   const quickActions = [
@@ -167,41 +175,33 @@ const Header = () => {
 
   return (
     <>
-      {/* Header */}
-      <header
-        className={cn(
-          "sticky top-0 z-50 w-full transition-all duration-300",
-          isScrolled ? "glass shadow-sm py-2" : "bg-transparent border-transparent py-4",
-        )}
-      >
+      <header className={headerStyles.header}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Brand */}
-            <div className="flex-shrink-0 mr-2">
+            <div className="flex-shrink-0 mr-2 flex items-center gap-3">
               <Link to="/" className="flex items-center group">
-                <span className="text-2xl font-bold font-serif tracking-tight text-foreground group-hover:text-primary transition-colors">
+                <span className={cn("text-2xl font-bold font-serif tracking-tight transition-colors", headerStyles.logoText)}>
                   PLAYMEET
                 </span>
               </Link>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1 bg-secondary/50 backdrop-blur-sm px-2 py-1 rounded-full border border-border/50">
-              {navigationLinks.map((link) => {
-                const isActive =
-                  location.pathname === link.path || (link.path !== "/" && location.pathname.startsWith(link.path))
+            <nav className={cn("hidden lg:flex items-center gap-1 backdrop-blur-sm px-2 py-1 rounded-full", headerStyles.nav)}>
+              {activeLinks.map((link) => {
+                const isActive = location.pathname === link.path || (link.path !== "/" && link.path !== "/esports" && location.pathname.startsWith(link.path))
 
                 return (
-                  <Link key={link.path} to={link.path}>
+                  <Link key={link.name} to={link.path}>
                     <Button
                       variant={isActive ? "secondary" : "ghost"}
                       className={cn(
                         "h-9 px-4 text-sm font-medium rounded-full transition-all duration-300",
-                        isActive
-                          ? "bg-background text-primary shadow-sm"
-                          : "text-muted-foreground hover:text-foreground hover:bg-background/50",
+                        isActive ? headerStyles.activeLink : headerStyles.inactiveLink
                       )}
                     >
+                      {link.icon && <link.icon className="w-4 h-4 mr-2" />}
                       {link.name}
                     </Button>
                   </Link>
@@ -215,10 +215,10 @@ const Header = () => {
               {isAuthenticated && (
                 <div className="hidden xl:flex items-center gap-2 mr-2">
                   {quickActions.map((action) => (
-                    <Tooltip>
+                    <Tooltip key={action.path}>
                       <TooltipTrigger>
-                        <Link key={action.path} to={action.path}>
-                          <Button variant="outline" size="sm" className="h-9 gap-2 bg-transparent">
+                        <Link to={action.path}>
+                          <Button variant="outline" size="sm" className={cn("h-9 gap-2 bg-transparent border-transparent", headerStyles.actionBtn)}>
                             <action.icon className="w-4 h-4" />
                             <span className="hidden 2xl:inline">{action.name}</span>
                           </Button>
@@ -228,7 +228,6 @@ const Header = () => {
                         <p>{action.name}</p>
                       </TooltipContent>
                     </Tooltip>
-
                   ))}
                 </div>
               )}
@@ -240,7 +239,7 @@ const Header = () => {
                     variant="ghost"
                     size="icon"
                     onClick={toggleTheme}
-                    className="text-muted-foreground hover:text-foreground"
+                    className={headerStyles.actionBtn}
                   >
                     <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -260,7 +259,7 @@ const Header = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="relative text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary"
+                          className={cn("relative rounded-full hover:bg-secondary", headerStyles.actionBtn)}
                         >
                           <Bell className="w-5 h-5" />
                           {unreadNotifications > 0 && (
@@ -288,12 +287,12 @@ const Header = () => {
                           {user?.name?.charAt(0) || "U"}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm font-medium text-foreground max-w-[100px] truncate">
+                      <span className="text-sm font-medium max-w-[100px] truncate">
                         {user?.name || "User"}
                       </span>
                       <ChevronDown
                         className={cn(
-                          "w-4 h-4 text-muted-foreground transition-transform",
+                          "w-4 h-4 transition-transform",
                           isProfileMenuOpen && "rotate-180",
                         )}
                       />
@@ -311,10 +310,7 @@ const Header = () => {
                           {[
                             { icon: User, label: "Profile", path: "/profile" },
                             { icon: Activity, label: "Dashboard", path: "/dashboard" },
-                            // { icon: MapPin, label: "Venues", path: "/venues" },
-                            // { icon: Trophy, label: "Leaderboard", path: "/leaderboard" },
                             { icon: CalendarCheck, label: "My Bookings", path: "/my-bookings" },
-                            // { icon: Search, label: "Athletes", path: "/athletes" },
                             { icon: Settings, label: "Settings", path: "/settings" },
                           ].map((item) => (
                             <Link
@@ -404,11 +400,11 @@ const Header = () => {
                   <p className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Navigation
                   </p>
-                  {navigationLinks.map((link) => {
+                  {activeLinks.map((link) => {
                     const isActive = location.pathname === link.path
                     return (
                       <Link
-                        key={link.path}
+                        key={link.name}
                         to={link.path}
                         onClick={() => setIsMenuOpen(false)}
                         className={cn(
@@ -418,7 +414,7 @@ const Header = () => {
                             : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                         )}
                       >
-                        <link.icon className="w-5 h-5" />
+                        {link.icon && <link.icon className="w-5 h-5" />}
                         {link.name}
                       </Link>
                     )
