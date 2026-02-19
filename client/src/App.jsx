@@ -39,6 +39,7 @@ import EsportsTournaments from './pages/esports/EsportsTournaments';
 import EsportsGames from './pages/esports/EsportsGames';
 import EsportsLeaderboard from './pages/esports/EsportsLeaderboard';
 import EsportsPlayers from './pages/esports/EsportsPlayers';
+import EsportsCommunity from './pages/esports/ServerDiscovery';
 
 // Protected User Pages
 import ModeSelection from './pages/ModeSelection';
@@ -228,6 +229,7 @@ const AppContent = () => {
             <Route path="esports/games" element={<ProtectedRoute requiredMode="esports"><EsportsGames /></ProtectedRoute>} />
             <Route path="esports/leaderboard" element={<ProtectedRoute requiredMode="esports"><EsportsLeaderboard /></ProtectedRoute>} />
             <Route path="esports/players" element={<ProtectedRoute requiredMode="esports"><EsportsPlayers /></ProtectedRoute>} />
+            <Route path="esports/community" element={<ProtectedRoute requiredMode="esports"><EsportsCommunity /></ProtectedRoute>} />
           </Route>
 
           {/* Admin Routes */}

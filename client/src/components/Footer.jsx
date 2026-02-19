@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import { FaXTwitter as Twitter } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
+import { useMode } from "@/context/ModeContext";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -51,17 +52,31 @@ const Footer = () => {
     { name: 'YouTube', icon: Youtube, url: 'https://youtube.com/' },
   ]
 
+  const { mode } = useMode();
+  const isEsports = mode === 'esports';
+
   return (
-    <footer className="bg-background border-t border-border relative overflow-hidden">
+    <footer className={cn(
+      "border-t relative overflow-hidden transition-colors duration-300",
+      isEsports ? "bg-[#09090b] border-purple-500/20 text-gray-400" : "bg-background border-border"
+    )}>
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02] -z-10" />
+      <div className={cn(
+        "absolute inset-0 -z-10",
+        isEsports ? "bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-purple-900/10 via-[#09090b] to-[#09090b]" : "bg-grid-black/[0.02] dark:bg-grid-white/[0.02]"
+      )} />
 
       <div className="container mx-auto px-4 py-16 sm:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16">
           {/* Brand Column */}
           <div className="lg:col-span-1 space-y-6">
             <Link to="/" className="inline-flex items-center gap-2 group">
-              <span className="text-2xl font-bold font-heading tracking-tight text-foreground group-hover:text-primary transition-colors">
+              <span className={cn(
+                "text-2xl font-bold font-orbitron tracking-widest transition-all",
+                isEsports
+                  ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                  : "text-foreground group-hover:text-primary"
+              )}>
                 PLAYMEET
               </span>
             </Link>

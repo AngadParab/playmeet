@@ -1,8 +1,6 @@
-import { useState } from 'react'
 import {
     Star,
     Quote,
-    CheckCircle,
 } from 'lucide-react'
 
 const EsportsTestimonials = () => {
@@ -31,24 +29,21 @@ const EsportsTestimonials = () => {
     ]
 
     return (
-        <section className="py-24 bg-background relative overflow-hidden text-foreground">
+        <section className="py-24 bg-[#09090b] relative overflow-hidden">
             {/* Background Elements */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-            </div>
+            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
 
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto px-4 relative z-10">
                 {/* Header */}
                 <div className="text-center max-w-3xl mx-auto mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary mb-6">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 rounded-full text-purple-400 mb-6 border border-purple-500/20">
                         <Quote className="w-4 h-4" />
                         <span className="text-sm font-bold">Player Stories</span>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold font-heading text-foreground mb-6">
-                        Trusted by the <span className="text-primary">Community</span>
+                    <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">
+                        Trusted by the <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Community</span>
                     </h2>
-                    <p className="text-base text-muted-foreground">
+                    <p className="text-base text-gray-400">
                         Join thousands of gamers who have elevated their play through our platform.
                     </p>
                 </div>
@@ -58,41 +53,40 @@ const EsportsTestimonials = () => {
                     {testimonials.map((testimonial, index) => (
                         <div
                             key={index}
-                            className="bg-secondary/10 p-8 rounded-2xl border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 group relative"
+                            className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(147,51,234,0.1)] group relative backdrop-blur-sm"
                         >
                             {/* Quote Icon */}
-                            <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors">
+                            <div className="absolute top-6 right-8 text-purple-500/20 group-hover:text-purple-500/40 transition-colors">
                                 <Quote className="w-12 h-12" />
                             </div>
                             {/* Stars */}
                             <div className="flex gap-1 mb-6">
                                 {[...Array(5)].map((_, i) => (
-                                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                    <Star key={i} className="w-4 h-4 fill-cyan-400 text-cyan-400" />
                                 ))}
                             </div>
                             {/* Content */}
-                            <p className="text-muted-foreground mb-8 relative z-10 leading-relaxed">
+                            <p className="text-gray-300 mb-8 relative z-10 leading-relaxed italic">
                                 "{testimonial.content}"
                             </p>
                             {/* Author */}
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-secondary p-1 border border-border">
-                                    <img
-                                        src={testimonial.image}
-                                        alt={testimonial.name}
-                                        className="w-full h-full rounded-full object-cover"
-                                    />
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 p-[2px]">
+                                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-[#09090b]">
+                                        <img
+                                            src={testimonial.image}
+                                            alt={testimonial.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
                                 </div>
                                 <div>
-                                    <div className="font-bold text-foreground">{testimonial.name}</div>
-                                    <div className="text-sm text-primary">{testimonial.role}</div>
+                                    <div className="font-bold text-white group-hover:text-cyan-400 transition-colors">{testimonial.name}</div>
+                                    <div className="text-sm text-purple-400">{testimonial.role}</div>
                                 </div>
                             </div>
                         </div>
                     ))}
-                </div>
-                <div className="text-center mt-12 text-xs text-gray-500 dark:text-gray-400 opacity-80">
-                    Note: These testimonials are simulated for the demo.
                 </div>
             </div>
         </section>

@@ -1,86 +1,101 @@
-import { Link } from 'react-router-dom'
-import {
-    Gamepad2,
-    Trophy,
-    Users,
-    Zap,
-    Star,
-    MonitorPlay
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Users, Trophy, Play, Star, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const EsportsHero = () => {
     return (
-        <section className='relative min-h-[90vh] flex flex-col justify-center overflow-hidden pb-12 bg-background'>
-            {/* Background Grid - keeping it subtle like the physical mode but with a tech vibe if needed, 
-              but for now just using cleaner background to match physical mode exactly */}
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none" />
+        <section className='relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#09090b]'>
+            {/* Background Effects */}
+            <div className='absolute inset-0 z-0'>
+                <div className='absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse' />
+                <div className='absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px]' />
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+            </div>
 
-            <div className='container mx-auto px-4 relative z-10'>
-                <div className='flex flex-col items-center text-center max-w-4xl mx-auto space-y-8'>
+            <div className='container relative z-10 px-4 pt-20 text-center'>
+                {/* Badge */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-8 backdrop-blur-sm'
+                >
+                    <span className='relative flex h-2 w-2'>
+                        <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75'></span>
+                        <span className='relative inline-flex rounded-full h-2 w-2 bg-cyan-500'></span>
+                    </span>
+                    <span className='text-sm font-medium text-purple-300 tracking-wide uppercase'>The Nexus of Competitive Gaming</span>
+                </motion.div>
 
-                    {/* Badge */}
-                    <div className='inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/50 backdrop-blur-sm border border-border shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500'>
-                        <span className='relative flex h-2 w-2'>
-                            <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75'></span>
-                            <span className='relative inline-flex rounded-full h-2 w-2 bg-primary'></span>
-                        </span>
-                        <span className='text-sm font-medium text-muted-foreground'>
-                            The Future of Competitive Gaming is Here
-                        </span>
-                    </div>
+                {/* Heading */}
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className='text-5xl md:text-7xl lg:text-8xl font-bold font-heading tracking-tight text-white mb-6'
+                >
+                    Find Your Dream <br />
+                    <span className='text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 animate-gradient-x'>Esports Team</span>
+                </motion.h1>
 
-                    {/* Heading */}
-                    <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold font-heading tracking-tight text-foreground animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100'>
-                        Find Your Dream <br />
-                        <span className='text-primary'>Esports Team</span>
-                    </h1>
+                {/* Description */}
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    className='text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed'
+                >
+                    Join the ultimate platform for competitive gamers. Recruit players, find scrims,
+                    compete in tournaments, and climb the leaderboards to glory.
+                </motion.p>
 
-                    {/* Description */}
-                    <p className='text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200'>
-                        Connect with top-tier talent, join competitive scrims, and dominate the leaderboards in the world's fastest growing esports community.
-                    </p>
+                {/* CTAs */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className='flex flex-col sm:flex-row items-center justify-center gap-4'
+                >
+                    <Link to='/esports/players'>
+                        <Button size="lg" className='h-14 px-8 text-lg bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white border-0 shadow-[0_0_20px_rgba(147,51,234,0.3)] transition-all hover:scale-105'>
+                            <Users className='w-5 h-5 mr-2' />
+                            Find Teammates
+                        </Button>
+                    </Link>
+                    <Link to='/esports/tournaments'>
+                        <Button size="lg" variant="outline" className='h-14 px-8 text-lg border-purple-500/30 bg-purple-500/5 text-purple-300 hover:bg-purple-500/10 hover:text-white hover:border-purple-500/50 backdrop-blur-sm'>
+                            <Trophy className='w-5 h-5 mr-2' />
+                            Join Tournaments
+                        </Button>
+                    </Link>
+                </motion.div>
 
-                    {/* Buttons */}
-                    <div className='flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full sm:w-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300'>
-                        <Link to='/esports/players'>
-                            <Button size="lg" className='h-12 px-8 rounded-full text-base shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all duration-300'>
-                                <Users className='w-5 h-5 mr-2' />
-                                Find Teammates
-                            </Button>
-                        </Link>
-                        <Link to='/esports/tournaments'>
-                            <Button variant="outline" size="lg" className='h-12 px-8 rounded-full text-base border-2 hover:bg-secondary/80'>
-                                <Trophy className='w-5 h-5 mr-2' />
-                                Join Tournaments
-                            </Button>
-                        </Link>
-                    </div>
-
-                    {/* Trust/Social Proof */}
-                    <div className="pt-8 flex items-center gap-4 text-sm text-muted-foreground animate-in fade-in slide-in-from-bottom-8 duration-700 delay-400">
-                        <div className="flex -space-x-2">
-                            {[1, 2, 3, 4].map((i) => (
-                                <div key={i} className="w-8 h-8 rounded-full border-2 border-background bg-secondary flex items-center justify-center text-[10px] font-bold">
-                                    <MonitorPlay className="w-4 h-4" />
-                                </div>
-                            ))}
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <div className="flex text-yellow-500">
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <Star key={i} className="w-4 h-4 fill-current" />
-                                ))}
+                {/* Social Proof / Stats */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.8 }}
+                    className='mt-20 pt-10 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-8'
+                >
+                    {[
+                        { label: 'Active Teams', value: '2.5K+', icon: Users },
+                        { label: 'Tournaments', value: '150+', icon: Trophy },
+                        { label: 'Matches Played', value: '12K+', icon: Play },
+                        { label: 'Pro Scrims', value: 'Daily', icon: Zap },
+                    ].map((stat, index) => (
+                        <div key={index} className='text-center group'>
+                            <div className='flex justify-center mb-3 text-purple-500 group-hover:text-cyan-400 transition-colors duration-300'>
+                                <stat.icon className='w-6 h-6' />
                             </div>
-                            <span className="font-medium text-foreground">Active Lobbies</span>
-                            <span>in 5+ Regions</span>
+                            <div className='text-3xl font-bold text-white mb-1 group-hover:scale-110 transition-transform duration-300'>{stat.value}</div>
+                            <div className='text-sm text-gray-500 font-medium tracking-wider uppercase'>{stat.label}</div>
                         </div>
-                    </div>
-                </div>
-
+                    ))}
+                </motion.div>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default EsportsHero
+export default EsportsHero;

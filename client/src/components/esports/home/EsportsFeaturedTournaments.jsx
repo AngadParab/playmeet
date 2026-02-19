@@ -1,133 +1,95 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-    ArrowRight,
-    Calendar,
-    Trophy,
-    Users,
-    Star,
-    Activity,
-    MapPin
-} from 'lucide-react';
+import { Calendar, Trophy, Users, ArrowRight, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const EsportsFeaturedTournaments = () => {
-    // Mock data for now, ideally fetched from API
     const tournaments = [
-        {
-            id: 1,
-            name: "Valorant Community Cup",
-            game: "Valorant",
-            date: "Oct 15, 2024",
-            prize: "$500",
-            teams: "16/32",
-            status: "Registration Open",
-            participants: 16, // teams
-            image: null // placeholder
-        },
-        {
-            id: 2,
-            name: "CS2 Weekend Warfare",
-            game: "CS2",
-            date: "Oct 20, 2024",
-            prize: "$250",
-            teams: "8/16",
-            status: "Upcoming",
-            participants: 8,
-            image: null
-        },
-        {
-            id: 3,
-            name: "League of Legends Showdown",
-            game: "League of Legends",
-            date: "Oct 22, 2024",
-            prize: "$1000",
-            teams: "32/32",
-            status: "Full",
-            participants: 32,
-            image: null
-        }
+        { id: 1, name: "Valorant Community Cup", game: "Valorant", date: "Oct 15, 2024", prize: "$500", teams: "16/32", status: "Registration Open", participants: 16 },
+        { id: 2, name: "CS2 Weekend Warfare", game: "CS2", date: "Oct 20, 2024", prize: "$250", teams: "8/16", status: "Upcoming", participants: 8 },
+        { id: 3, name: "League of Legends Showdown", game: "League of Legends", date: "Oct 22, 2024", prize: "$1000", teams: "32/32", status: "Full", participants: 32 },
+        { id: 4, name: "Rocket League Rumble", game: "Rocket League", date: "Oct 25, 2024", prize: "$300", teams: "10/16", status: "Registration Open", participants: 10 },
     ];
 
     return (
-        <section className='py-24 bg-background border-t border-border z-10'>
+        <section className='py-24 bg-[#09090b] relative border-y border-white/5'>
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay pointer-events-none"></div>
 
-            <div className='container mx-auto px-4'>
+            <div className='container mx-auto px-4 relative z-10'>
                 <div className='flex flex-col md:flex-row justify-between items-end mb-12 gap-6'>
-                    <div className='max-w-2xl'>
-                        <div className='flex items-center gap-2 text-primary font-medium mb-4'>
-                            <Activity className='w-4 h-4' />
-                            <span className='text-sm uppercase tracking-wider'>Live Action</span>
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+                            <Trophy className="w-4 h-4" />
+                            <span>Competitive Scene</span>
                         </div>
-                        <h2 className='text-3xl md:text-4xl font-bold font-heading text-foreground mb-4'>
-                            Featured Tournaments
+                        <h2 className='text-3xl md:text-5xl font-bold font-heading text-white'>
+                            Featured <span className='text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400'>Tournaments</span>
                         </h2>
-                        <p className='text-muted-foreground text-lg'>
-                            Join high-stakes tournaments and prove your skills on the big stage.
-                        </p>
                     </div>
-                    <Link to='/esports/tournaments' className='hidden md:flex items-center gap-2 text-foreground font-medium hover:text-primary transition-colors group'>
-                        View all tournaments <ArrowRight className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
+                    <Link to='/esports/tournaments'>
+                        <Button variant="outline" className='border-purple-500/30 text-purple-300 hover:bg-purple-500/10 hover:text-white hover:border-purple-500/50'>
+                            View All Tournaments
+                        </Button>
                     </Link>
                 </div>
 
-                {tournaments.length > 0 ? (
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                        {tournaments.map((tournament) => (
-                            <Link
-                                key={tournament.id}
-                                to={`/esports/tournaments`}
-                                className='group flex flex-col bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300'
-                            >
-                                <div className='relative h-52 overflow-hidden bg-secondary'>
-                                    <div className='w-full h-full flex items-center justify-center text-muted-foreground bg-primary/5'>
-                                        <Trophy className='w-12 h-12 opacity-20' />
-                                    </div>
-                                    <div className='absolute top-4 right-4 px-3 py-1.5 rounded-full bg-background/90 backdrop-blur-md text-xs font-bold text-foreground border border-border shadow-sm'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+                    {tournaments.map((tournament) => (
+                        <div key={tournament.id} className='group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-300'>
+                            <div className="relative h-32 bg-gradient-to-br from-purple-900/40 to-black p-4 flex flex-col justify-between">
+                                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-500 to-transparent"></div>
+                                <div className="relative z-10 flex justify-between items-start">
+                                    <Badge variant="secondary" className="bg-black/40 backdrop-blur-md text-white border border-white/10">
                                         {tournament.game}
-                                    </div>
+                                    </Badge>
+                                    <Badge className={`${tournament.status === 'Registration Open'
+                                            ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                                            : tournament.status === 'Full'
+                                                ? 'bg-red-500/20 text-red-300 border-red-500/30'
+                                                : 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                                        } border backdrop-blur-md`}>
+                                        {tournament.status}
+                                    </Badge>
                                 </div>
+                            </div>
 
-                                <div className='p-6 flex-1 flex flex-col'>
-                                    <div className='flex items-center gap-2 text-xs font-bold text-primary mb-3 uppercase tracking-wide'>
-                                        <Calendar className='w-3.5 h-3.5' />
-                                        {tournament.date}
+                            <div className='p-5 space-y-4'>
+                                <h3 className='text-lg font-bold font-heading text-white line-clamp-1 group-hover:text-cyan-400 transition-colors'>
+                                    {tournament.name}
+                                </h3>
+
+                                <div className='space-y-2 text-sm text-gray-400'>
+                                    <div className='flex items-center justify-between'>
+                                        <div className='flex items-center gap-2'>
+                                            <Calendar className='w-4 h-4' />
+                                            <span>{tournament.date}</span>
+                                        </div>
                                     </div>
-
-                                    <h3 className='text-xl font-bold font-heading text-foreground mb-2 line-clamp-1 group-hover:text-primary transition-colors'>
-                                        {tournament.name}
-                                    </h3>
-
-                                    <div className='flex items-center gap-2 text-sm text-muted-foreground mb-6'>
-                                        <Trophy className='w-4 h-4 text-yellow-500' />
-                                        <span className='truncate font-medium text-foreground'>Prize: {tournament.prize}</span>
-                                    </div>
-
-                                    <div className='mt-auto pt-6 border-t border-border flex items-center justify-between'>
-                                        <div className='flex items-center gap-2 text-sm text-muted-foreground font-medium'>
+                                    <div className='flex items-center justify-between'>
+                                        <div className='flex items-center gap-2'>
+                                            <Trophy className='w-4 h-4 text-purple-400' />
+                                            <span className="text-purple-300 font-medium">{tournament.prize}</span>
+                                        </div>
+                                        <div className='flex items-center gap-2'>
                                             <Users className='w-4 h-4' />
-                                            <span>{tournament.participants} Teams</span>
-                                        </div>
-                                        <div className='flex items-center gap-1 text-sm font-bold text-foreground bg-secondary/50 px-2 py-1 rounded-md'>
-                                            <div className={`w-2 h-2 rounded-full ${tournament.status === 'Registration Open' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                            {tournament.status}
+                                            <span>{tournament.teams}</span>
                                         </div>
                                     </div>
                                 </div>
-                            </Link>
-                        ))}
-                    </div>
-                ) : (
-                    <div className='text-center py-24 bg-card rounded-2xl border border-border'>
-                        <div className='w-16 h-16 mx-auto mb-6 rounded-full bg-secondary flex items-center justify-center'>
-                            <Trophy className='w-8 h-8 text-muted-foreground' />
+
+                                <Link to={`/esports/tournaments`}>
+                                    <Button className='w-full mt-2 bg-white/5 hover:bg-cyan-500/20 text-white hover:text-cyan-300 border border-white/5 hover:border-cyan-500/30 transition-all'>
+                                        View Details
+                                        <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
-                        <h3 className='text-xl font-bold text-foreground mb-2'>No tournaments found</h3>
-                        <p className='text-muted-foreground mb-8'>Check back later for upcoming competitive events.</p>
-                    </div>
-                )}
+                    ))}
+                </div>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default EsportsFeaturedTournaments
+export default EsportsFeaturedTournaments;

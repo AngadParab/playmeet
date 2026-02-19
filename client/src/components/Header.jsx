@@ -140,7 +140,7 @@ const Header = () => {
     { name: "Games", path: "/esports/games", icon: Gamepad2 },
     { name: "Leaderboard", path: "/esports/leaderboard", icon: Activity },
     { name: "Players", path: "/esports/players", icon: User },
-    { name: "Community", path: "/community", icon: Users },
+    { name: "Community", path: "/esports/community", icon: Users },
   ]
 
   const activeLinks = isEsports ? esportsNavigation : defaultNavigation
@@ -150,13 +150,32 @@ const Header = () => {
   const headerStyles = {
     header: cn(
       "sticky top-0 z-50 w-full transition-all duration-300",
-      isScrolled ? "glass shadow-sm py-2" : "bg-transparent border-transparent py-4",
+      isScrolled
+        ? (isEsports ? "bg-[#09090b]/80 backdrop-blur-md border-b border-purple-500/20 py-2" : "glass shadow-sm py-2")
+        : "bg-transparent border-transparent py-4",
     ),
-    nav: "bg-secondary/50 border border-border/50",
-    activeLink: "bg-background text-primary shadow-sm",
-    inactiveLink: "text-muted-foreground hover:text-foreground hover:bg-background/50",
-    logoText: "text-foreground group-hover:text-primary transition-colors",
-    actionBtn: "text-muted-foreground hover:text-foreground"
+    nav: cn(
+      "backdrop-blur-sm px-2 py-1 rounded-full border",
+      isEsports ? "bg-black/40 border-purple-500/20" : "bg-secondary/50 border-border/50"
+    ),
+    activeLink: cn(
+      "shadow-sm transition-all duration-300",
+      isEsports ? "bg-purple-600 text-white" : "bg-background text-primary"
+    ),
+    inactiveLink: cn(
+      "transition-colors",
+      isEsports ? "text-gray-400 hover:text-white hover:bg-white/5" : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+    ),
+    logoText: cn(
+      "font-bold font-orbitron tracking-widest transition-all",
+      isEsports
+        ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+        : "text-foreground group-hover:text-primary"
+    ),
+    actionBtn: cn(
+      "transition-colors",
+      isEsports ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+    )
   }
 
   // Quick actions for authenticated users
