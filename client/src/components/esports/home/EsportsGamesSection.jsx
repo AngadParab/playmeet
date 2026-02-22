@@ -13,40 +13,13 @@ const EsportsGamesSection = () => {
             image: '/assets/esports/valorant.jpg'
         },
         {
-            id: 'cs2',
-            name: 'CS2',
+            id: 'bgmi',
+            name: 'Battlegrounds Mobile India',
             icon: Crosshair,
-            participants: '120k+',
-            tournaments: '30+',
-            description: 'The premier tactical shooter',
-            image: '/assets/esports/Counter strike 2.jpg'
-        },
-        {
-            id: 'lol',
-            name: 'League of Legends',
-            icon: Sword,
-            participants: '200k+',
-            tournaments: '60+',
-            description: 'Multiplayer online battle arena',
-            image: '/assets/esports/Legue Of Legends.jpg'
-        },
-        {
-            id: 'dota2',
-            name: 'Dota 2',
-            icon: Sword,
-            participants: '80k+',
-            tournaments: '25+',
-            description: 'Deepest strategy RTS',
-            image: '/assets/esports/dota 2.jpg'
-        },
-        {
-            id: 'rocket-league',
-            name: 'Rocket League',
-            icon: Gamepad2,
-            participants: '90k+',
-            tournaments: '40+',
-            description: 'Soccer with rocket-powered cars',
-            image: '/assets/esports/Rocket Legue.avif'
+            participants: '350k+',
+            tournaments: '90+',
+            description: 'India\'s premier Battle Royale',
+            image: '/assets/esports/battleground mobile india.avif'
         },
         {
             id: 'apex',
@@ -56,6 +29,15 @@ const EsportsGamesSection = () => {
             tournaments: '35+',
             description: 'Team-based hero shooter',
             image: '/assets/esports/Apex Legends.jpg'
+        },
+        {
+            id: 'freefire',
+            name: 'Free Fire',
+            icon: Crosshair,
+            participants: '800k+',
+            tournaments: '200+',
+            description: 'Fast-paced mobile Battle Royale',
+            image: '/assets/esports/freefire.jpeg'
         },
     ];
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
 import { Button } from "@/components/ui/button";
 import { Gamepad2, Users, ArrowRight, Trophy } from "lucide-react";
 
@@ -11,6 +12,9 @@ const games = [
     { name: "Dota 2", genre: "MOBA", players: "200k Active", image: '/assets/esports/dota 2.jpg' },
     { name: "Apex Legends", genre: "Battle Royale", players: "150k Active", image: '/assets/esports/Apex Legends.jpg' },
     { name: "Rocket League", genre: "Sports", players: "80k Active", image: '/assets/esports/Rocket Legue.avif' },
+    { name: "PlayerUnknown's Battlegrounds", genre: "Battle Royale", players: "400k Active", image: '/assets/esports/playerunknown battleground mobile india.avif' },
+    { name: "Battlegrounds Mobile India", genre: "Battle Royale", players: "350k Active", image: '/assets/esports/battleground mobile india.avif' },
+    { name: "Free Fire", genre: "Battle Royale", players: "800k Active", image: '/assets/esports/freefire.jpeg' },
 ];
 
 const EsportsGames = () => {

@@ -6,20 +6,16 @@ import {
   Mail,
   ArrowRight,
   AlertCircle,
-  Trophy,
-  Zap,
-  Users,
-  Target,
-  Sparkles,
   Shield,
-  CheckCircle,
   KeyRound,
-  Loader2
+  Loader2,
+  Users,
+  Activity
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import ModernInput from "@/components/ModernInput"
 import { loginSchema, defaultLoginValues } from "@/schemas/authSchema"
@@ -56,166 +52,170 @@ const Login = () => {
   }
 
   return (
-    <div className="h-screen bg-background relative overflow-hidden">
-      {/* Login Form */}
-      <div className="relative z-10 h-full flex w-full flex items-center justify-center p-6">
-        <div className="w-full max-w-sm animate-in fade-in zoom-in-95 duration-500">
-          <Card className="border-border bg-card shadow-2xl shadow-black/5 rounded-3xl">
-            <CardHeader className="pb-6 pt-8">
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center shadow-sm transition-transform hover:scale-105 hover:rotate-3">
-                    <Shield className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-                <CardTitle className="text-2xl font-bold text-foreground mb-2">
-                  Welcome Back
-                </CardTitle>
-                <p className="text-muted-foreground text-sm">
-                  Sign in to continue your sports journey
-                </p>
-              </div>
-            </CardHeader>
+    <div className="min-h-screen flex text-foreground bg-[#050505]">
+      {/* Left Column - Hero */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#050505]">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542652694-40abf526446e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-screen" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-[#050505]/80 to-purple-600/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
 
-            <CardContent className="space-y-6 px-6 pb-6">
-              {authError && (
-                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  <Alert className="border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 rounded-xl">
-                    <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                    <AlertTitle className="text-red-800 dark:text-red-200 font-semibold text-sm">
-                      Authentication Error
-                    </AlertTitle>
-                    <AlertDescription className="text-red-700 dark:text-red-300 text-sm">
-                      {authError}
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              )}
+        {/* Animated Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-10000" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-7000" />
 
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                  <div>
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <ModernInput
-                              icon={Mail}
-                              type="email"
-                              placeholder="Email Address"
-                              value={field.value}
-                              onChange={field.onChange}
-                              onBlur={field.onBlur}
-                              name={field.name}
-                              error={form.formState.errors.email?.message}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+        <div className="relative z-10 flex flex-col justify-between p-12 xl:p-20 h-full text-white w-full">
+          <Link to="/" className="flex items-center gap-3 w-fit group">
+            <span className="text-3xl font-bold font-orbitron tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+              PLAYMEET
+            </span>
+          </Link>
 
-                  <div>
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <ModernInput
-                              icon={KeyRound}
-                              type="password"
-                              placeholder="Password"
-                              value={field.value}
-                              onChange={field.onChange}
-                              onBlur={field.onBlur}
-                              name={field.name}
-                              error={form.formState.errors.password?.message}
-                              showPassword={showPassword}
-                              onTogglePassword={() => setShowPassword(!showPassword)}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex justify-end">
-                    <Link
-                      to="/forgot-password"
-                      className="text-sm text-muted-foreground hover:text-primary font-medium hover:underline transition-colors"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-
-                  <div>
-                    <Button
-                      type="submit"
-                      disabled={form.formState.isSubmitting || loading}
-                      className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm hover:shadow-md transition-all duration-300 rounded-xl group relative overflow-hidden"
-                    >
-                      <div className="relative z-10 flex items-center justify-center">
-                        {form.formState.isSubmitting || loading ? (
-                          <div className="flex items-center space-x-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Signing In...</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center space-x-2">
-                            <span>Sign In</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        )}
-                      </div>
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-
-              <div className="text-center pt-4 border-t border-border">
-                <p className="text-muted-foreground text-sm">
-                  Don't have an account?{" "}
-                  <Link
-                    to="/register"
-                    className="text-primary hover:underline font-semibold transition-colors"
-                  >
-                    Sign up here
-                  </Link>
-                </p>
-              </div>
-
-              {/* Trust Indicators */}
-              {/* <div className="flex items-center justify-center space-x-6 pt-2">
-                  {[
-                    { icon: Shield, text: "Secure", color: "text-green-600" },
-                    { icon: CheckCircle, text: "Trusted", color: "text-blue-600" },
-                    { icon: Sparkles, text: "Premium", color: "text-purple-600" },
-                  ].map((item, index) => (
-                    <div
-                      key={item.text}
-                      className="flex items-center space-x-1 text-xs text-muted-foreground animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-backwards"
-                      style={{ animationDelay: `${index * 100 + 500}ms` }}
-                    >
-                      <item.icon className={`w-3 h-3 ${item.color}`} />
-                      <span className="font-medium">{item.text}</span>
-                    </div>
-                  ))}
-                </div> */}
-            </CardContent>
-          </Card>
-
-          {/* Mobile Logo */}
-          <div className="lg:hidden text-center mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
-            <div className="flex items-center justify-center space-x-2">
-              <span className="font-bold text-lg text-foreground">PLAYMEET</span>
-              <Zap className="w-5 h-5 text-yellow-500" />
-            </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              Your sports community awaits
+          <div className="space-y-8 max-w-xl animate-in slide-in-from-bottom-8 duration-1000 fade-in mb-12">
+            <Badge variant="outline" className="border-white/20 text-white bg-white/5 backdrop-blur-md px-5 py-2 text-sm font-mono uppercase tracking-widest rounded-full">
+              Authentication
+            </Badge>
+            <h1 className="text-5xl lg:text-7xl font-black tracking-tighter leading-[1.05] font-heading">
+              Return to <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">Glory.</span>
+            </h1>
+            <p className="text-xl text-gray-400 font-medium max-w-md leading-relaxed">
+              Log in to reconnect with your team, manage your tournaments, and dominate the leaderboards.
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column - Form Pane */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 xl:p-24 relative bg-[#050505] overflow-y-auto">
+        {/* Subtle mobile background */}
+        <div className="absolute inset-0 lg:hidden pointer-events-none">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542652694-40abf526446e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-screen" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/95 to-[#050505]/80" />
+        </div>
+
+        <div className="w-full max-w-md relative z-10 animate-in fade-in zoom-in-95 duration-700 py-12">
+
+          <div className="text-center lg:text-left mb-10">
+            <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
+              <span className="text-3xl font-bold font-orbitron tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                PLAYMEET
+              </span>
+            </div>
+
+            <h2 className="text-4xl font-black tracking-tight text-white mb-3">Sign In</h2>
+            <p className="text-gray-400 text-base">
+              Enter your configuration details to proceed.
+            </p>
+          </div>
+
+          {authError && (
+            <div className="animate-in fade-in slide-in-from-top-2 duration-300 mb-8">
+              <Alert className="border-red-500/30 bg-red-500/10 backdrop-blur-md rounded-2xl p-4">
+                <AlertCircle className="h-5 w-5 text-red-500" />
+                <AlertTitle className="text-red-400 font-semibold text-base mb-1">Authentication Error</AlertTitle>
+                <AlertDescription className="text-red-200/80 text-sm">
+                  {authError}
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ModernInput
+                        icon={Mail}
+                        type="email"
+                        placeholder="Email Address"
+                        value={field.value}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        error={form.formState.errors.email?.message}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ModernInput
+                        icon={KeyRound}
+                        type="password"
+                        placeholder="Password"
+                        value={field.value}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        error={form.formState.errors.password?.message}
+                        showPassword={showPassword}
+                        onTogglePassword={() => setShowPassword(!showPassword)}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex items-center justify-between pt-2">
+                <div className="flex items-center space-x-3">
+                  <div className="relative flex items-center justify-center">
+                    <input type="checkbox" id="remember" className="peer appearance-none w-5 h-5 border-2 border-white/20 rounded-md bg-white/5 checked:bg-primary checked:border-primary transition-colors cursor-pointer" />
+                    <svg className="absolute w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 5L4.5 8.5L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <label htmlFor="remember" className="text-sm font-medium text-gray-400 cursor-pointer select-none hover:text-white transition-colors">Remember me</label>
+                </div>
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-bold text-primary hover:text-primary/80 transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  disabled={form.formState.isSubmitting || loading}
+                  className="w-full h-14 bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 text-white font-bold text-lg shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] hover:-translate-y-0.5 transition-all duration-300 rounded-2xl group relative overflow-hidden border-0"
+                >
+                  <div className="relative z-10 flex items-center justify-center gap-2">
+                    {form.formState.isSubmitting || loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Authenticating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Sign In</span>
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </div>
+                </Button>
+              </div>
+            </form>
+          </Form>
+
+          <div className="mt-12 text-center lg:text-left text-sm pt-6 border-t border-white/10">
+            <span className="text-gray-400 font-medium">New to PLAYMEET? </span>
+            <Link
+              to="/register"
+              className="text-white font-bold hover:text-primary transition-colors inline-block ml-1 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[2px] after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform hover:after:scale-x-100 hover:after:origin-bottom-left"
+            >
+              Create an account
+            </Link>
           </div>
         </div>
       </div>

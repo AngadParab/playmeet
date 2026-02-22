@@ -35,11 +35,19 @@ import Leaderboard from './pages/leaderboard/Leaderboard';
 import Athletes from './pages/athletes/Athletes';
 // Esports Pages
 import Esports from './pages/esports/Esports';
-import EsportsTournaments from './pages/esports/EsportsTournaments';
+
 import EsportsGames from './pages/esports/EsportsGames';
 import EsportsLeaderboard from './pages/esports/EsportsLeaderboard';
 import EsportsPlayers from './pages/esports/EsportsPlayers';
 import EsportsCommunity from './pages/esports/ServerDiscovery';
+import EsportsHome from './pages/esports/EsportsHome';
+import EsportsDashboard from './pages/esports/EsportsDashboard';
+import TournamentBrowser from './pages/esports/TournamentBrowser';
+import CreateTournament from './pages/esports/CreateTournament';
+import TournamentLobby from './pages/esports/TournamentLobby';
+import HostManager from './pages/esports/HostManager';
+import { EsportsProvider } from './context/EsportsContext';
+import EsportsLayout from './pages/esports/EsportsLayout';
 
 // Protected User Pages
 import ModeSelection from './pages/ModeSelection';
@@ -120,7 +128,7 @@ const ProtectedRoute = ({ children, adminOnly = false, title = "", data = {}, re
   // If a specific mode is required for this route (e.g., only 'athletes' or only 'esports')
   if (requiredMode && mode !== requiredMode && !adminOnly) {
     // Redirect to the dashboard of the current mode or back to mode selection
-    return <Navigate to={mode ? "/dashboard" : "/mode-selection"} replace />;
+    return <Navigate to={mode === 'esports' ? "/esports" : (mode === 'athletes' ? "/home" : "/mode-selection")} replace />;
   }
 
   if (adminOnly && user?.role !== 'admin') {
@@ -224,10 +232,19 @@ const AppContent = () => {
 
 
             {/* --- ESPORTS MODE ROUTES --- */}
-            <Route path="esports" element={<ProtectedRoute requiredMode="esports"><Esports /></ProtectedRoute>} />
-            <Route path="esports/tournaments" element={<ProtectedRoute requiredMode="esports"><EsportsTournaments /></ProtectedRoute>} />
-            <Route path="esports/games" element={<ProtectedRoute requiredMode="esports"><EsportsGames /></ProtectedRoute>} />
-            <Route path="esports/leaderboard" element={<ProtectedRoute requiredMode="esports"><EsportsLeaderboard /></ProtectedRoute>} />
+            <Route path="esports" element={<ProtectedRoute requiredMode="esports"><EsportsProvider><EsportsLayout /></EsportsProvider></ProtectedRoute>}>
+              <Route index element={<EsportsHome />} />
+              <Route path="dashboard" element={<EsportsDashboard />} />
+              <Route path="tournaments" element={<TournamentBrowser />} />
+              <Route path="tournaments/:id/lobby" element={<TournamentLobby />} />
+              <Route path="tournaments/create" element={<CreateTournament />} />
+              <Route path="tournaments/:id/manage" element={<HostManager />} />
+              <Route path="gamers" element={<Esports />} />
+              <Route path="games" element={<EsportsGames />} />
+              <Route path="leaderboard" element={<EsportsLeaderboard />} />
+              <Route path="scrims" element={<div className="text-white p-8">Scrims Page Coming Soon</div>} />
+              <Route path="teams" element={<div className="text-white p-8">My Teams Page Coming Soon</div>} />
+            </Route>
             <Route path="esports/players" element={<ProtectedRoute requiredMode="esports"><EsportsPlayers /></ProtectedRoute>} />
             <Route path="esports/community" element={<ProtectedRoute requiredMode="esports"><EsportsCommunity /></ProtectedRoute>} />
           </Route>

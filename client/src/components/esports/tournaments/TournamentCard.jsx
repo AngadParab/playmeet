@@ -4,8 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+import { useAuth } from '@/hooks/useAuth';
+
 const TournamentCard = ({ tournament, onJoin }) => {
+    const { user } = useAuth();
     const isLive = tournament.status === "Ongoing";
+
+    // Safely check if the currently logged-in user is a participant
+    const isParticipant = user ? tournament.participants?.some(p =>
+        (typeof p.user === 'string' ? p.user : p.user?._id) === user._id
+    ) : false;
 
     return (
         <motion.div
@@ -19,7 +27,7 @@ const TournamentCard = ({ tournament, onJoin }) => {
                 <div className="relative h-48 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
                     <img
-                        src={tournament.image || `https://source.unsplash.com/random/800x600?${tournament.gameTitle}`}
+                        src={tournament.images?.[0]?.url || `https://source.unsplash.com/random/800x600?${tournament.gameTitle}`}
                         alt={tournament.title}
                         className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                     />
@@ -81,13 +89,26 @@ const TournamentCard = ({ tournament, onJoin }) => {
                         </div>
                     </div>
 
-                    <Button
-                        onClick={() => onJoin(tournament)}
-                        className="w-full mt-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold tracking-wide border-0 shadow-lg shadow-purple-900/20"
-                    >
-                        <Zap className="w-4 h-4 mr-2" />
-                        Join Tournament
-                    </Button>
+                    {/* Button Logic */}
+                    {isParticipant ? (
+                        <Button
+                            onClick={() => onJoin(tournament)} // Reuse handler, but it will navigate
+                            className="w-full mt-2 bg-green-600 hover:bg-green-700 text-white font-bold tracking-wide border-0 shadow-lg"
+                        >
+                            <Zap className="w-4 h-4 mr-2" />
+                            Go to Lobby
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={() => onJoin(tournament)}
+                            disabled={tournament.status === "Registration Closed" || tournament.status === "Completed" || tournament.participants.length >= tournament.maxParticipants}
+                            className="w-full mt-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold tracking-wide border-0 shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Zap className="w-4 h-4 mr-2" />
+                            {tournament.status === "Registration Closed" ? "Registration Closed" :
+                                tournament.participants.length >= tournament.maxParticipants ? "Tournament Full" : "Join Tournament"}
+                        </Button>
+                    )}
                 </CardContent>
             </Card>
         </motion.div>

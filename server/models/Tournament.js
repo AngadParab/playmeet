@@ -11,7 +11,7 @@ const tournamentSchema = new mongoose.Schema(
         gameTitle: {
             type: String,
             required: [true, "Game title is required"],
-            enum: ["Valorant", "CS2", "League of Legends", "Dota 2", "Rocket League", "Overwatch 2", "Fortnite", "Apex Legends", "Call of Duty"],
+            enum: ["Valorant", "CS2", "League of Legends", "Dota 2", "Rocket League", "Overwatch 2", "Fortnite", "Apex Legends", "Call of Duty", "PlayerUnknown's Battlegrounds", "Battlegrounds Mobile India", "Free Fire"],
         },
         description: {
             type: String,
@@ -50,6 +50,27 @@ const tournamentSchema = new mongoose.Schema(
             type: Number,
             default: 1
         },
+
+        credentials: {
+            roomId: {
+                type: String,
+                trim: true,
+                select: false // Only revealed explicitly
+            },
+            password: {
+                type: String,
+                trim: true,
+                select: false // Only revealed explicitly
+            },
+            isPrivate: {
+                type: Boolean,
+                default: true
+            }
+        },
+        maxPerTeam: {
+            type: Number,
+            default: 1, // 1=Solo, 2=Duo, 3=Trio, 4=Squad, 5=Team
+        },
         participants: [
             {
                 user: {
@@ -60,7 +81,25 @@ const tournamentSchema = new mongoose.Schema(
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "EsportsProfile"
                 },
-                teamName: String, // Optional if it's a team tournament
+                // For Team Tournaments (Duos/Squads)
+                teamName: {
+                    type: String,
+                    trim: true
+                },
+                teamMembers: [
+                    {
+                        user: {
+                            type: mongoose.Schema.Types.ObjectId,
+                            ref: "User"
+                        },
+                        gamertag: String,
+                        status: {
+                            type: String,
+                            enum: ["pending", "accepted", "rejected"],
+                            default: "pending"
+                        }
+                    }
+                ],
                 status: {
                     type: String,
                     enum: ["registered", "checked_in", "disqualified"],

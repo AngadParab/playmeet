@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Trophy, Medal, Activity, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
+
 const EsportsLeaderboard = () => {
     const [period, setPeriod] = useState("weekly");
 

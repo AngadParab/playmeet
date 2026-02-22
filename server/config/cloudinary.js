@@ -1,7 +1,7 @@
 ﻿// @ts-nocheck
 
-import cloudinary from 'cloudinary';
-import CloudinaryStorage from 'multer-storage-cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import multer from 'multer';
 import dotenv from 'dotenv';
 
@@ -13,7 +13,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = CloudinaryStorage({
+const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'PLAYMEET-2',
@@ -21,6 +21,8 @@ const storage = CloudinaryStorage({
     transformation: [{ width: 500, height: 500, crop: 'limit' }],
     public_id: (req, file) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      // Remove extension from filename if present, as Cloudinary adds it based on format
+      const name = file.originalname.split('.')[0];
       return `${file.fieldname}-${uniqueSuffix}`;
     },
   },
@@ -53,7 +55,7 @@ const deleteImage = async (publicId) => {
 const uploadImage = async (file, options = {}) => {
   try {
 
-   const uploadOptions = {
+    const uploadOptions = {
       folder: 'PLAYMEET-2',
       ...options,
       transformation: [

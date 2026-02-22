@@ -10,7 +10,6 @@ const EsportsHero = () => {
             <div className='absolute inset-0 z-0'>
                 <div className='absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse' />
                 <div className='absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px]' />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
             </div>
 
             <div className='container relative z-10 px-4 pt-20 text-center'>

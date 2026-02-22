@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useMode } from '@/context/ModeContext';
 import { toast } from 'react-hot-toast';
 import { Bell, Lock, Save } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
 const Settings = () => {
   const { user, updatePreferences, updatePassword } = useAuth();
+  const { mode } = useMode();
+  const isEsports = mode === 'esports';
   const [preferences, setPreferences] = useState({
     emailNotifications: true,
     pushNotifications: true,
@@ -121,7 +125,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className={cn("container mx-auto max-w-4xl px-4 py-8", isEsports && "esports-theme")}>
       <h1 className="mb-8 text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -147,7 +151,7 @@ const Settings = () => {
                     onChange={handlePreferenceChange}
                     className="sr-only"
                   />
-                  <div className={`block h-6 w-10 rounded-full ${preferences.emailNotifications ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
+                  <div className={`block h-6 w-10 rounded-full ${preferences.emailNotifications ? (isEsports ? 'bg-purple-600' : 'bg-primary') : 'bg-gray-300'}`}></div>
                   <div className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform ${preferences.emailNotifications ? 'translate-x-4' : ''}`}></div>
                 </div>
               </div>
@@ -170,7 +174,7 @@ const Settings = () => {
                     onChange={handlePreferenceChange}
                     className="sr-only"
                   />
-                  <div className={`block h-6 w-10 rounded-full ${preferences.pushNotifications ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
+                  <div className={`block h-6 w-10 rounded-full ${preferences.pushNotifications ? (isEsports ? 'bg-purple-600' : 'bg-primary') : 'bg-gray-300'}`}></div>
                   <div className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform ${preferences.pushNotifications ? 'translate-x-4' : ''}`}></div>
                 </div>
               </div>
@@ -206,7 +210,10 @@ const Settings = () => {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center rounded-md bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 dark:bg-blue-500 dark:hover:bg-blue-600"
+              className={`flex w-full items-center justify-center rounded-md py-2 px-4 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-70 transition-colors ${isEsports
+                ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500'
+                : 'bg-primary hover:bg-primary/90 focus:ring-primary'
+                }`}
             >
               <Save className="mr-2 h-4 w-4" />
               {loading ? 'Saving...' : 'Save Preferences'}
@@ -237,7 +244,8 @@ const Settings = () => {
                   value={passwordData.currentPassword}
                   onChange={handlePasswordChange}
                   className={`block w-full rounded-md border ${errors.currentPassword ? 'border-red-300' : 'border-gray-300'
-                    } bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 sm:text-sm`}
+                    } bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 sm:text-sm ${isEsports ? 'focus:border-purple-500 focus:ring-purple-500' : 'focus:border-primary focus:ring-primary'
+                    }`}
                   placeholder="Enter your current password"
                 />
               </div>
@@ -261,7 +269,8 @@ const Settings = () => {
                   value={passwordData.newPassword}
                   onChange={handlePasswordChange}
                   className={`block w-full rounded-md border ${errors.newPassword ? 'border-red-300' : 'border-gray-300'
-                    } bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 sm:text-sm`}
+                    } bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 sm:text-sm ${isEsports ? 'focus:border-purple-500 focus:ring-purple-500' : 'focus:border-primary focus:ring-primary'
+                    }`}
                   placeholder="Enter your new password"
                 />
               </div>
@@ -285,7 +294,8 @@ const Settings = () => {
                   value={passwordData.confirmPassword}
                   onChange={handlePasswordChange}
                   className={`block w-full rounded-md border ${errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-                    } bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 sm:text-sm`}
+                    } bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 sm:text-sm ${isEsports ? 'focus:border-purple-500 focus:ring-purple-500' : 'focus:border-primary focus:ring-primary'
+                    }`}
                   placeholder="Confirm your new password"
                 />
               </div>
@@ -297,7 +307,10 @@ const Settings = () => {
             <button
               type="submit"
               disabled={passwordLoading}
-              className="flex w-full items-center justify-center rounded-md bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 dark:bg-blue-500 dark:hover:bg-blue-600"
+              className={`flex w-full items-center justify-center rounded-md py-2 px-4 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-70 transition-colors ${isEsports
+                ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500'
+                : 'bg-primary hover:bg-primary/90 focus:ring-primary'
+                }`}
             >
               <Save className="mr-2 h-4 w-4" />
               {passwordLoading ? 'Updating...' : 'Update Password'}

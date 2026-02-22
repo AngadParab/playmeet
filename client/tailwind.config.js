@@ -13,8 +13,6 @@ export default {
 			},
 			colors: {
 				primary: {
-					light: '#1e40af',
-					dark: '#3b82f6',
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
 				},

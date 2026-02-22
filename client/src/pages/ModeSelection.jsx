@@ -14,9 +14,9 @@ const ModeSelection = () => {
     const handleModeSelect = (mode) => {
         selectMode(mode);
         if (mode === 'athletes') {
-            navigate('/dashboard'); // Or '/athletes' base route
+            navigate('/home');
         } else {
-            navigate('/esports'); // Or '/esports' base route
+            navigate('/esports');
         }
     };
 

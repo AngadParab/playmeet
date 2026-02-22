@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react"
 import { useAuth } from "@/hooks/useAuth"
+import { useMode } from "@/context/ModeContext"
 import { format } from "date-fns"
 import { toast } from "react-hot-toast"
 import { useForm, useFieldArray } from "react-hook-form"
@@ -64,10 +65,11 @@ import { Progress } from "@/components/ui/progress"
 import api from "@/utils/api"
 import { profileSchema, achievementSchema } from "@/schemas/profileSchema"
 import FollowersDialog from "@/components/profile/FollowersDialog"
-
-
+import { cn } from "@/lib/utils"
 const Profile = () => {
   const { user, updateProfile, addAchievement } = useAuth()
+  const { mode } = useMode()
+  const isEsports = mode === 'esports'
   const [editing, setEditing] = useState(false)
   const [avatarFile, setAvatarFile] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState("")
@@ -274,7 +276,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-12">
+    <div className={cn("min-h-screen bg-background pb-12", isEsports && "esports-theme")}>
       <div className="container mx-auto max-w-5xl px-4 py-8 space-y-8">
         {/* Profile Header Card */}
         <Card className="overflow-hidden border-none shadow-none bg-transparent">

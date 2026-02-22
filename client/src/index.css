@@ -33,10 +33,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 180 63% 34%;
-    /* #208c8c */
-    /* Vibrant Teal */
-    --primary-foreground: 210 40% 98%;
+    --primary: 142 76% 36%;
+    /* #16a34a (green-600) */
+    /* Athletic Green */
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -52,7 +52,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 142 76% 36%;
 
     --radius: 0.75rem;
   }
@@ -91,6 +91,13 @@
     --border: 185 9% 26%;
     --input: 185 9% 26%;
     --ring: 180 63% 34%;
+  }
+
+  .dark .esports-theme {
+    /* Esports Theme - Purple accents */
+    --primary: 271 81% 65%;
+    /* Tailwind purple-500 fallback equivalent */
+    --ring: 271 81% 65%;
   }
 }
 

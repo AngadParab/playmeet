@@ -12,8 +12,6 @@ import {
   LogOut,
   ChevronDown,
   Search,
-  Moon,
-  Sun,
   Shield,
   Users,
   Settings,
@@ -24,8 +22,10 @@ import {
   CalendarCheck,
   Gamepad2,
   MousePointer2,
-  Radio
+  Radio,
+  Gamepad
 } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
@@ -39,17 +39,8 @@ import { Badge } from "@/components/ui/badge"
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth()
-  const { mode } = useMode()
+  const { mode, selectMode } = useMode()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      return (
-        localStorage.getItem("theme") === "dark" ||
-        (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)
-      )
-    }
-    return false
-  })
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
@@ -71,17 +62,6 @@ const Header = () => {
     setIsMenuOpen(false)
     setIsProfileMenuOpen(false)
   }, [location.pathname])
-
-  // Theme management
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark")
-      localStorage.setItem("theme", "dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-      localStorage.setItem("theme", "light")
-    }
-  }, [isDarkMode])
 
   // Close profile menu on outside click
   useEffect(() => {
@@ -105,10 +85,6 @@ const Header = () => {
       document.body.style.overflow = ""
     }
   }, [isMenuOpen])
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
-  }
 
   const handleLogout = async () => {
     try {
@@ -178,20 +154,6 @@ const Header = () => {
     )
   }
 
-  // Quick actions for authenticated users
-  const quickActions = [
-    {
-      name: "Create Event",
-      path: "/events/create",
-      icon: PlusCircle,
-    },
-    {
-      name: "Search",
-      path: "/search",
-      icon: Search,
-    },
-  ]
-
   return (
     <>
       <header className={headerStyles.header}>
@@ -230,44 +192,32 @@ const Header = () => {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
-              {/* Quick Actions (Desktop) */}
-              {isAuthenticated && (
-                <div className="hidden xl:flex items-center gap-2 mr-2">
-                  {quickActions.map((action) => (
-                    <Tooltip key={action.path}>
-                      <TooltipTrigger>
-                        <Link to={action.path}>
-                          <Button variant="outline" size="sm" className={cn("h-9 gap-2 bg-transparent border-transparent", headerStyles.actionBtn)}>
-                            <action.icon className="w-4 h-4" />
-                            <span className="hidden 2xl:inline">{action.name}</span>
-                          </Button>
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{action.name}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  ))}
-                </div>
-              )}
 
-              {/* Theme Toggle */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={toggleTheme}
-                    className={headerStyles.actionBtn}
-                  >
-                    <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Toggle theme</p>
-                </TooltipContent>
-              </Tooltip>
+              {/* Mode Toggle */}
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/30 border border-border/50">
+                <span className={cn(
+                  "text-xs font-semibold uppercase tracking-wider transition-colors duration-300 cursor-pointer",
+                  !isEsports ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                )} onClick={() => { selectMode('athletes'); navigate('/home'); }}>Athletes</span>
+                <Switch
+                  checked={isEsports}
+                  onCheckedChange={(checked) => {
+                    const newMode = checked ? 'esports' : 'athletes';
+                    selectMode(newMode);
+                    navigate(newMode === 'esports' ? '/esports' : '/home');
+                  }}
+                  className={cn(
+                    "data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-primary",
+                    "shadow-inner"
+                  )}
+                />
+                <span className={cn(
+                  "text-xs font-semibold uppercase tracking-wider transition-colors duration-300 flex items-center gap-1 cursor-pointer",
+                  isEsports ? "text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-muted-foreground hover:text-foreground"
+                )} onClick={() => { selectMode('esports'); navigate('/esports'); }}>
+                  Esports <Gamepad className="w-3 h-3" />
+                </span>
+              </div>
 
               {isAuthenticated ? (
                 <>
@@ -297,12 +247,21 @@ const Header = () => {
                   <div className="relative hidden md:block" ref={profileMenuRef}>
                     <Button
                       variant="ghost"
-                      className="gap-2 pl-2 pr-3 h-10 rounded-full hover:bg-secondary border border-transparent hover:border-border"
+                      className={cn(
+                        "gap-2 pl-2 pr-3 h-10 rounded-full border border-transparent transition-colors",
+                        isEsports ? "hover:bg-purple-500/20 hover:border-purple-500/50 text-gray-200" : "hover:bg-secondary hover:border-border"
+                      )}
                       onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                     >
-                      <Avatar className="w-8 h-8 border-2 border-background shadow-sm">
+                      <Avatar className={cn(
+                        "w-8 h-8 border-2 shadow-sm transition-colors",
+                        isEsports ? "border-[#09090b]" : "border-background"
+                      )}>
                         <AvatarImage src={user?.avatar?.url} />
-                        <AvatarFallback className="text-lg bg-primary/10 text-primary">
+                        <AvatarFallback className={cn(
+                          "text-lg",
+                          isEsports ? "bg-purple-500/20 text-purple-400" : "bg-primary/10 text-primary"
+                        )}>
                           {user?.name?.charAt(0) || "U"}
                         </AvatarFallback>
                       </Avatar>
@@ -318,17 +277,23 @@ const Header = () => {
                     </Button>
 
                     {isProfileMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-64 bg-popover/95 backdrop-blur-xl text-popover-foreground rounded-2xl shadow-xl border border-border/50 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
+                      <div className={cn(
+                        "absolute right-0 mt-2 w-64 backdrop-blur-xl rounded-2xl shadow-xl border overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200",
+                        isEsports ? "bg-[#09090b]/95 border-purple-500/20 text-gray-200" : "bg-popover/95 border-border/50 text-popover-foreground"
+                      )}>
                         <div className="p-2">
-                          <div className="px-3 py-2 mb-1 bg-secondary/50 rounded-xl">
+                          <div className={cn(
+                            "px-3 py-2 mb-1 rounded-xl",
+                            isEsports ? "bg-white/5" : "bg-secondary/50"
+                          )}>
                             <p className="text-sm font-semibold leading-none">{user?.name}</p>
-                            <p className="text-xs text-muted-foreground mt-1">{user?.email}</p>
+                            <p className={cn("text-xs mt-1", isEsports ? "text-gray-400" : "text-muted-foreground")}>{user?.email}</p>
                           </div>
-                          <div className="h-px bg-border/50 my-1" />
+                          <div className={cn("h-px my-1", isEsports ? "bg-white/10" : "bg-border/50")} />
 
                           {[
                             { icon: User, label: "Profile", path: "/profile" },
-                            { icon: Activity, label: "Dashboard", path: "/dashboard" },
+                            { icon: Activity, label: "Dashboard", path: isEsports ? "/esports/dashboard" : "/dashboard" },
                             { icon: CalendarCheck, label: "My Bookings", path: "/my-bookings" },
                             { icon: Settings, label: "Settings", path: "/settings" },
                           ].map((item) => (
@@ -336,7 +301,10 @@ const Header = () => {
                               key={item.path}
                               to={item.path}
                               onClick={() => setIsProfileMenuOpen(false)}
-                              className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                              className={cn(
+                                "flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors",
+                                isEsports ? "hover:bg-purple-500/20 hover:text-purple-400" : "hover:bg-primary/10 hover:text-primary"
+                              )}
                             >
                               <item.icon className="w-4 h-4" />
                               {item.label}
@@ -347,18 +315,24 @@ const Header = () => {
                             <Link
                               to="/admin/dashboard"
                               onClick={() => setIsProfileMenuOpen(false)}
-                              className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-primary/10 hover:text-primary transition-colors text-primary font-medium"
+                              className={cn(
+                                "flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors font-medium",
+                                isEsports ? "hover:bg-purple-500/20 text-purple-400" : "hover:bg-primary/10 text-primary"
+                              )}
                             >
                               <Shield className="w-4 h-4" />
                               Admin Panel
                             </Link>
                           )}
 
-                          <div className="h-px bg-border/50 my-1" />
+                          <div className={cn("h-px my-1", isEsports ? "bg-white/10" : "bg-border/50")} />
 
                           <button
                             onClick={handleLogout}
-                            className="flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-destructive/10 hover:text-red-500 transition-colors text-red-500"
+                            className={cn(
+                              "flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors text-red-500",
+                              isEsports ? "hover:bg-red-500/20" : "hover:bg-destructive/10"
+                            )}
                           >
                             <LogOut className="w-4 h-4" />
                             Sign Out
@@ -444,20 +418,36 @@ const Header = () => {
                   <>
                     <div className="h-px bg-border" />
 
-                    {/* Quick Actions */}
-                    <div className="space-y-1">
-                      <p className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        Quick Actions
+                    {/* Mobile Mode Toggle */}
+                    <div className="space-y-3 px-3 py-2">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        Platform Mode
                       </p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {quickActions.map((action) => (
-                          <Link key={action.path} to={action.path} onClick={() => setIsMenuOpen(false)}>
-                            <Button variant="outline" className="w-full justify-start gap-2 bg-transparent" size="sm">
-                              <action.icon className="w-4 h-4" />
-                              {action.name}
-                            </Button>
-                          </Link>
-                        ))}
+                      <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/20 border border-border/50">
+                        <div className="flex flex-col gap-1">
+                          <span className={cn(
+                            "text-sm font-semibold transition-colors duration-300 cursor-pointer",
+                            !isEsports ? "text-primary" : "text-muted-foreground"
+                          )} onClick={() => { selectMode('athletes'); navigate('/home'); setIsMenuOpen(false); }}>Athletes</span>
+                          <span className={cn(
+                            "text-sm font-semibold transition-colors duration-300 flex items-center gap-1 cursor-pointer",
+                            isEsports ? "text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" : "text-muted-foreground"
+                          )} onClick={() => { selectMode('esports'); navigate('/esports'); setIsMenuOpen(false); }}>
+                            Esports <Gamepad className="w-3.5 h-3.5" />
+                          </span>
+                        </div>
+                        <Switch
+                          checked={isEsports}
+                          onCheckedChange={(checked) => {
+                            const newMode = checked ? 'esports' : 'athletes';
+                            selectMode(newMode);
+                            navigate(newMode === 'esports' ? '/esports' : '/home');
+                            setIsMenuOpen(false);
+                          }}
+                          className={cn(
+                            "scale-125 data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-primary shadow-lg"
+                          )}
+                        />
                       </div>
                     </div>
 
@@ -470,7 +460,7 @@ const Header = () => {
                       </p>
                       {[
                         { icon: User, label: "Profile", path: "/profile" },
-                        { icon: Activity, label: "Dashboard", path: "/dashboard" },
+                        { icon: Activity, label: "Dashboard", path: isEsports ? "/esports/dashboard" : "/dashboard" },
                         { icon: CalendarCheck, label: "My Bookings", path: "/my-bookings" },
                         { icon: Settings, label: "Settings", path: "/settings" },
                         ...(user?.role === "admin"

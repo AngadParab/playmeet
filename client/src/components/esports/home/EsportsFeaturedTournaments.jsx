@@ -5,15 +5,14 @@ import { Badge } from '@/components/ui/badge';
 
 const EsportsFeaturedTournaments = () => {
     const tournaments = [
-        { id: 1, name: "Valorant Community Cup", game: "Valorant", date: "Oct 15, 2024", prize: "$500", teams: "16/32", status: "Registration Open", participants: 16 },
-        { id: 2, name: "CS2 Weekend Warfare", game: "CS2", date: "Oct 20, 2024", prize: "$250", teams: "8/16", status: "Upcoming", participants: 8 },
-        { id: 3, name: "League of Legends Showdown", game: "League of Legends", date: "Oct 22, 2024", prize: "$1000", teams: "32/32", status: "Full", participants: 32 },
-        { id: 4, name: "Rocket League Rumble", game: "Rocket League", date: "Oct 25, 2024", prize: "$300", teams: "10/16", status: "Registration Open", participants: 10 },
+        { id: 1, name: "Valorant Community Cup", game: "Valorant", date: "Oct 15, 2024", prize: "$500", teams: "16/32", status: "Registration Open", participants: 16, image: "/assets/esports/valorant.jpg" },
+        { id: 2, name: "CS2 Weekend Warfare", game: "CS2", date: "Oct 20, 2024", prize: "$250", teams: "8/16", status: "Upcoming", participants: 8, image: "/assets/esports/Counter strike 2.jpg" },
+        { id: 3, name: "League of Legends Showdown", game: "League of Legends", date: "Oct 22, 2024", prize: "$1000", teams: "32/32", status: "Full", participants: 32, image: "/assets/esports/Legue Of Legends.jpg" },
+        { id: 4, name: "Rocket League Rumble", game: "Rocket League", date: "Oct 25, 2024", prize: "$300", teams: "10/16", status: "Registration Open", participants: 10, image: "/assets/esports/Rocket Legue.avif" },
     ];
 
     return (
         <section className='py-24 bg-[#09090b] relative border-y border-white/5'>
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay pointer-events-none"></div>
 
             <div className='container mx-auto px-4 relative z-10'>
                 <div className='flex flex-col md:flex-row justify-between items-end mb-12 gap-6'>
@@ -36,17 +35,25 @@ const EsportsFeaturedTournaments = () => {
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
                     {tournaments.map((tournament) => (
                         <div key={tournament.id} className='group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-300'>
-                            <div className="relative h-32 bg-gradient-to-br from-purple-900/40 to-black p-4 flex flex-col justify-between">
-                                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-500 to-transparent"></div>
+                            <div className="relative h-48 p-4 flex flex-col justify-between group-hover:h-52 transition-all duration-300">
+                                <div className="absolute inset-0">
+                                    <img
+                                        src={tournament.image}
+                                        alt={tournament.game}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/40 to-transparent opacity-90"></div>
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-purple-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                 <div className="relative z-10 flex justify-between items-start">
                                     <Badge variant="secondary" className="bg-black/40 backdrop-blur-md text-white border border-white/10">
                                         {tournament.game}
                                     </Badge>
                                     <Badge className={`${tournament.status === 'Registration Open'
-                                            ? 'bg-green-500/20 text-green-300 border-green-500/30'
-                                            : tournament.status === 'Full'
-                                                ? 'bg-red-500/20 text-red-300 border-red-500/30'
-                                                : 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                                        ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                                        : tournament.status === 'Full'
+                                            ? 'bg-red-500/20 text-red-300 border-red-500/30'
+                                            : 'bg-blue-500/20 text-blue-300 border-blue-500/30'
                                         } border backdrop-blur-md`}>
                                         {tournament.status}
                                     </Badge>
